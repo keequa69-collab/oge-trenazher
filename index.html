@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тренажёр ОГЭ по русскому</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* Идея: бланк ответов ОГЭ — холодная бумага в клетку, синие чернила, красная ручка проверяющего */
+:root{
+  --paper:#f4f6fa; --sheet:#ffffff; --ink:#16203a; --muted:#5a6684; --line:#d8dfeb;
+  --blue:#2448c4; --blue-soft:#e6ecfc; --red:#c4342b; --red-soft:#fdebea; --green:#1d7f47; --green-soft:#e3f4ea; --amber:#a86800; --amber-soft:#fdf2dc;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif; --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --r:10px; color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0e1320; --sheet:#151b2b; --ink:#e5eaf5; --muted:#9aa5c0; --line:#28324a;
+  --blue:#8aa5ff; --blue-soft:#1d2848; --red:#ff8a80; --red-soft:#3a1d1f; --green:#5fd394; --green-soft:#16301f; --amber:#f2b955; --amber-soft:#33280f; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --paper:#0e1320; --sheet:#151b2b; --ink:#e5eaf5; --muted:#9aa5c0; --line:#28324a;
+  --blue:#8aa5ff; --blue-soft:#1d2848; --red:#ff8a80; --red-soft:#3a1d1f; --green:#5fd394; --green-soft:#16301f; --amber:#f2b955; --amber-soft:#33280f; color-scheme:dark;}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.55 var(--body);
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:24px 24px;background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0;background:var(--paper);opacity:.82;z-index:-1}
+a{color:var(--blue)}
+h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15}
+h2{font-size:1.35rem}
+h3{font-size:1.05rem}
+h4{margin:1.3em 0 .4em;font-size:1rem}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 18px}
+header.top{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--sheet) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar{display:flex;align-items:center;gap:16px;padding:10px 0}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-family:var(--display);font-weight:700;font-size:.95rem;white-space:nowrap}
+.logo b{display:inline-grid;place-items:center;width:34px;height:34px;border:2px solid var(--blue);color:var(--blue);border-radius:6px;font-family:var(--mono);font-size:.8rem}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1}
+nav.tabs a{padding:8px 12px;border-radius:8px;text-decoration:none;color:var(--muted);font-weight:500;white-space:nowrap}
+nav.tabs a:hover{background:var(--blue-soft);color:var(--ink)}
+nav.tabs a.on{background:var(--blue);color:#fff}
+:root[data-theme="dark"] nav.tabs a.on{color:#0e1320}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) nav.tabs a.on{color:#0e1320}}
+main{padding:28px 0 60px}
+@media (max-width:700px){.topbar{flex-wrap:wrap;gap:6px}nav.tabs{flex-basis:100%}.logo span{font-size:.85rem}}
+.view{display:none}.view.on{display:block}
+.sheet{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+.lead{font-size:1.08rem}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--blue);background:var(--blue);color:#fff;padding:9px 16px;border-radius:8px;font-weight:600;cursor:pointer;text-decoration:none}
+:root[data-theme="dark"] .btn:not(.ghost){color:#0e1320}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn:not(.ghost){color:#0e1320}}
+.btn.ghost{background:transparent;color:var(--blue)}
+.btn.red{background:var(--red);border-color:var(--red)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:99px;font-size:.8rem;font-weight:600;background:var(--blue-soft);color:var(--blue)}
+.pill.ok{background:var(--green-soft);color:var(--green)}
+.pill.bad{background:var(--red-soft);color:var(--red)}
+.pill.warn{background:var(--amber-soft);color:var(--amber)}
+.note{border-left:3px solid var(--amber);background:var(--amber-soft);padding:8px 12px;border-radius:0 8px 8px 0;font-size:.93rem}
+.tbl{border-collapse:collapse;width:100%;margin:.6em 0;font-size:.93rem}
+.tbl th,.tbl td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+.tbl th{background:var(--blue-soft);font-weight:600}
+.tblwrap{overflow-x:auto}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* Главная */
+.hero{display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:start}
+@media (max-width:820px){.hero{grid-template-columns:1fr}}
+.hero p{max-width:62ch}
+.stamp{display:inline-block;font-family:var(--mono);font-size:.78rem;border:1.5px solid var(--red);color:var(--red);padding:2px 8px;border-radius:4px;transform:rotate(-2deg);margin-bottom:12px}
+.plan li{margin:.25em 0}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.kpi{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--paper)}
+.kpi .v{font-family:var(--mono);font-size:1.6rem;font-weight:700}
+.taskcard{display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:var(--r);padding:14px;background:var(--sheet);transition:border-color .15s}
+.taskcard:hover{border-color:var(--blue)}
+.taskcard .no{font-family:var(--mono);font-weight:700;color:var(--blue);font-size:1.1rem}
+.bar{height:6px;border-radius:9px;background:var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--green)}
+.hard{border-color:var(--red)}
+.hard .no{color:var(--red)}
+
+/* Теория */
+.theory{display:grid;grid-template-columns:230px 1fr;gap:20px;align-items:start}
+@media (max-width:820px){.theory{grid-template-columns:1fr}}
+.side{position:sticky;top:76px;display:flex;flex-direction:column;gap:4px}
+@media (max-width:820px){.side{position:static;flex-direction:row;overflow-x:auto}}
+.side a{padding:9px 12px;border-radius:8px;text-decoration:none;color:var(--ink);border:1px solid transparent;white-space:nowrap}
+.side a small{display:block;color:var(--muted);font-size:.78rem}
+.side a.on{background:var(--sheet);border-color:var(--blue)}
+.th-body{max-width:76ch}
+.th-body i{color:var(--blue);font-style:normal;font-weight:500}
+
+/* Задание */
+.prac{display:grid;grid-template-columns:240px 1fr;gap:20px;align-items:start}
+@media (max-width:820px){.prac{grid-template-columns:1fr}}
+.tlist{display:flex;flex-direction:column;gap:4px;position:sticky;top:76px}
+@media (max-width:820px){.tlist{position:static;flex-direction:row;overflow-x:auto}}
+.tlist a{display:grid;grid-template-columns:30px 1fr;gap:8px;align-items:center;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--ink);border:1px solid transparent;line-height:1.3}
+@media (max-width:820px){.tlist a{white-space:nowrap}}
+.tlist a .n{font-family:var(--mono);font-weight:700;color:var(--blue)}
+.tlist a.on{background:var(--sheet);border-color:var(--blue)}
+.tlist a small{display:block;color:var(--muted);font-size:.75rem}
+.qhead{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.qno{display:inline-grid;place-items:center;min-width:44px;height:44px;padding:0 8px;border:2px solid var(--ink);border-radius:6px;font-family:var(--mono);font-weight:700;font-size:1.1rem;margin-right:12px}
+.instr{font-weight:600;margin:6px 0 12px}
+.ctext{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin:0 0 14px;max-height:340px;overflow:auto}
+.ctext p{margin:.2em 0}
+.ctext .sn{font-family:var(--mono);color:var(--muted);font-size:.85rem}
+.sentence{font-size:1.08rem;background:var(--paper);border:1px dashed var(--line);border-radius:8px;padding:12px 16px;margin-bottom:14px}
+.sentence .gap{font-family:var(--mono);color:var(--blue);font-weight:700;font-size:.85em}
+.opts{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:6px}
+.opts li{display:grid;grid-template-columns:28px 1fr;gap:8px;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--sheet)}
+.opts li .n{font-family:var(--mono);font-weight:700;color:var(--muted)}
+.opts li.right{border-color:var(--green);background:var(--green-soft)}
+.opts li.wrong{border-color:var(--red);background:var(--red-soft)}
+.opts li .why:not([hidden]){display:block;font-size:.88rem;color:var(--muted);margin-top:3px}
+.rules{margin:0 0 12px;padding:0;list-style:none}
+.rules li{padding:3px 0;font-weight:500}
+.answerline{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px;border:1.5px solid var(--ink);border-radius:8px;background:var(--sheet)}
+.answerline label{font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em}
+.cells{font-family:var(--mono);font-size:1.3rem;font-weight:700;letter-spacing:.9em;padding:6px 0 6px .45em;width:min(100%,calc(14 * 1.5em));border:1.5px solid var(--line);border-radius:4px;color:var(--blue);
+  background:repeating-linear-gradient(90deg,transparent 0 calc(1.5em - 1px),var(--line) calc(1.5em - 1px) 1.5em),var(--sheet);text-transform:uppercase}
+.cells.word{letter-spacing:.9em}
+.verdict{margin-top:14px;padding:12px 14px;border-radius:8px;font-weight:600}
+.verdict.ok{background:var(--green-soft);color:var(--green)}
+.verdict.bad{background:var(--red-soft);color:var(--red)}
+.verdict .ex{display:block;font-weight:400;color:var(--ink);margin-top:4px}
+.hintbox{margin-top:12px;padding:10px 14px;border-radius:8px;background:var(--blue-soft);font-size:.95rem}
+
+/* Вариант */
+.vitem{border-top:1px solid var(--line);padding-top:18px;margin-top:18px}
+.timer{font-family:var(--mono);font-weight:700;font-size:1.1rem}
+
+/* Изложение */
+.steps{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 16px}
+.steps span{padding:6px 12px;border-radius:99px;border:1px solid var(--line);font-size:.85rem;color:var(--muted)}
+.steps span.on{border-color:var(--blue);color:var(--blue);font-weight:600;background:var(--blue-soft)}
+.steps span.done{color:var(--green);border-color:var(--green)}
+textarea.essay{width:100%;min-height:300px;padding:14px 16px;border:1.5px solid var(--line);border-radius:8px;background:var(--sheet);line-height:1.8;resize:vertical;
+  background-image:linear-gradient(transparent calc(1.8em - 1px),var(--line) 1.8em);background-size:100% 1.8em;background-attachment:local;background-position:0 14px}
+textarea.notes{width:100%;min-height:120px;padding:10px 12px;border:1px dashed var(--line);border-radius:8px;background:var(--paper)}
+.wc{font-family:var(--mono);font-weight:700}
+.wc.low{color:var(--red)}.wc.okc{color:var(--green)}
+.score{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.sc{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--sheet)}
+.sc .k{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.sc .v{font-family:var(--mono);font-size:1.5rem;font-weight:700}
+.sc.full .v{color:var(--green)}.sc.zero .v{color:var(--red)}
+.errs{margin:.3em 0 .8em;padding-left:1.1em}
+.errs li{margin:.25em 0}
+.errs mark{background:var(--red-soft);color:var(--red);padding:0 3px;border-radius:3px}
+.src p{margin:.5em 0}
+details{border:1px solid var(--line);border-radius:8px;padding:10px 14px;background:var(--sheet);margin:10px 0}
+summary{cursor:pointer;font-weight:600}
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.field label{font-weight:600;font-size:.9rem}
+.field input,.field select,.field textarea{padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;background:var(--sheet)}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spinner{animation:none}}
+.rec td:first-child{font-weight:600;white-space:nowrap}
+.advs{list-style:none;padding:0;margin:8px 0;display:flex;flex-direction:column;gap:6px}
+.adv{padding:9px 12px;border-radius:8px;border-left:3px solid var(--blue);background:var(--blue-soft)}
+.adv.bad{border-color:var(--red);background:var(--red-soft)}.adv.warn{border-color:var(--amber);background:var(--amber-soft)}.adv.ok{border-color:var(--green);background:var(--green-soft)}
+.kp5{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.ok-t{color:var(--green)}.bad-t{color:var(--red)}.nowrap{white-space:nowrap}
+.clickable tr[data-i]{cursor:pointer}.clickable tr[data-i]:hover td{background:var(--blue-soft)}
+.acc{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.acc span{font-weight:600;font-size:.88rem;max-width:180px;overflow:hidden;text-overflow:ellipsis}
+.acc button{border:1px solid var(--line);background:transparent;border-radius:8px;padding:6px 10px;cursor:pointer;color:var(--muted)}
+.login{max-width:420px;margin:40px auto}
+@media (max-width:1320px) and (min-width:701px){.logo span{display:none}}
+.banner{margin:0 0 18px}
+footer{border-top:1px solid var(--line);padding:18px 0;color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap topbar">
+  <a class="logo" href="#home"><b>ОГЭ</b><span>Тренажёр по русскому</span></a>
+  <nav class="tabs" id="tabs">
+    <a href="#home" data-v="home">Главная</a>
+    <a href="#theory" data-v="theory">Теория</a>
+    <a href="#practice" data-v="practice">Задания 2–12</a>
+    <a href="#variant" data-v="variant">Вариант</a>
+    <a href="#izlozhenie" data-v="izlozhenie">Изложение</a>
+    <a href="#progress" data-v="progress">Прогресс</a>
+    <a href="#admin" data-v="admin" id="tab-admin" hidden>Админ</a>
+  </nav>
+  <div class="acc" id="acc" hidden><span id="acc-name"></span><button id="acc-out" type="button">Выйти</button></div>
+</div></header>
+
+<main class="wrap">
+<p class="note banner small" id="demo-note" hidden>Демо-режим: вход по почте и сохранение прогресса в аккаунте работают в версии сайта, выложенной на хостинг с подключённым Firebase. Сейчас прогресс хранится только в этом браузере.</p>
+<p class="note banner small" id="verify-note" hidden>Подтвердите почту: мы отправили письмо со ссылкой. Без подтверждения администратор не получит доступ к разделу «Админ».</p>
+<p class="muted" id="boot" hidden><span class="spinner"></span> Загрузка…</p>
+
+<!-- ВХОД -->
+<section class="view" id="v-login">
+  <div class="sheet login">
+    <span class="stamp">ОГЭ · 2026 · 9 класс</span>
+    <h2 id="auth-title">Вход</h2>
+    <p class="small muted">Войдите, чтобы прогресс, изложения и рекомендации сохранялись в вашем аккаунте.</p>
+    <form id="auth-form" novalidate>
+      <div class="field" id="auth-name-f" hidden><label for="auth-name">Имя и фамилия</label><input id="auth-name" autocomplete="name"></div>
+      <div class="field"><label for="auth-email">Почта</label><input id="auth-email" type="email" autocomplete="email" required></div>
+      <div class="field" id="auth-pass-f"><label for="auth-pass">Пароль</label><input id="auth-pass" type="password" autocomplete="current-password" minlength="6"></div>
+      <button class="btn" id="auth-go" type="submit" style="width:100%;justify-content:center">Войти</button>
+    </form>
+    <p class="small" id="auth-msg" aria-live="polite"></p>
+    <p class="small muted" id="auth-links"></p>
+  </div>
+</section>
+<!-- ГЛАВНАЯ -->
+<section class="view" id="v-home">
+  <div class="hero">
+    <div>
+      <span class="stamp">ОГЭ · 2026 · 9 класс</span>
+      <h1>Подготовка к ОГЭ по русскому языку: задания, правила и проверка изложения</h1>
+      <p class="lead">Решайте задания 2–12 в формате открытого банка ФИПИ с подсказками и разбором, повторяйте правила и пишите сжатое изложение на слух — ИИ проверит его по критериям ФИПИ.</p>
+      <div class="row"><a class="btn" href="#practice">Решать задания</a><a class="btn ghost" href="#izlozhenie">Написать изложение</a><a class="btn ghost" href="#variant">Пройти вариант</a></div>
+    </div>
+    <div class="sheet">
+      <h3>Ваш результат</h3>
+      <div class="kpis" style="margin-top:12px">
+        <div class="kpi"><div class="v" id="k-solved">0</div><div class="small muted">решено заданий</div></div>
+        <div class="kpi"><div class="v" id="k-acc">—</div><div class="small muted">верных ответов</div></div>
+        <div class="kpi"><div class="v" id="k-izl">0</div><div class="small muted">изложений</div></div>
+      </div>
+      <p class="small muted" style="margin-bottom:0"><a href="#progress">Подробнее: что улучшить →</a></p>
+    </div>
+  </div>
+
+  <h2 style="margin:34px 0 12px">Задания второй части</h2>
+  <p class="muted" style="margin-top:0">Красной рамкой отмечены задания, которые хуже всего решают на экзамене: орфография и пунктуация.</p>
+  <div class="grid g3" id="home-tasks"></div>
+
+  <div class="grid g2" style="margin-top:34px">
+    <div class="sheet">
+      <h3>Структура экзамена</h3>
+      <div class="tblwrap"><table class="tbl" style="margin-top:12px">
+        <tr><th>Часть</th><th>Задание</th><th>Баллы</th></tr>
+        <tr><td>1</td><td>Сжатое изложение (аудиозапись звучит 2 раза)</td><td class="num">6</td></tr>
+        <tr><td>2</td><td>Задания 2–12 с кратким ответом</td><td class="num">11</td></tr>
+        <tr><td>3</td><td>Сочинение-рассуждение 13.1, 13.2 или 13.3</td><td class="num">7</td></tr>
+        <tr><td colspan="2">Грамотность ГК1–ГК4 и фактическая точность ФК1</td><td class="num">13</td></tr>
+        <tr><th colspan="2">Всего</th><th class="num">37</th></tr>
+      </table></div>
+      <p class="small muted">Время экзамена — 3 часа 55 минут. Можно пользоваться орфографическим словарём.</p>
+    </div>
+    <div class="sheet">
+      <h3>О проекте</h3>
+      <p><b>Цель:</b> разработать интерактивный веб-сайт-тренажёр для эффективной подготовки девятиклассников к ОГЭ по русскому языку.</p>
+      <ol class="plan small">
+        <li>Изучить структуру и наиболее сложные задания ОГЭ.</li>
+        <li>Отобрать и систематизировать теорию и правила.</li>
+        <li>Изучить основы HTML, CSS и JavaScript.</li>
+        <li>Разработать дизайн, структуру и программную логику сайта.</li>
+        <li>Протестировать сайт среди одноклассников и собрать отзывы.</li>
+      </ol>
+      <p class="small muted" style="margin-bottom:0">Задания составлены по образцу открытого банка ФИПИ, критерии — по методическим рекомендациям ФИПИ на 2026 год.</p>
+    </div>
+  </div>
+
+  <div class="sheet" style="margin-top:16px" id="feedback">
+    <h3>Отзыв о тренажёре</h3>
+    <p class="small muted">Для пятой задачи проекта: одноклассники заполняют анкету и отправляют её автору.</p>
+    <div class="grid g3">
+      <div class="field"><label for="fb-name">Имя</label><input id="fb-name" placeholder="Например, Аня"></div>
+      <div class="field"><label for="fb-rate">Оценка сайта</label><select id="fb-rate"><option>5 — отлично</option><option>4 — хорошо</option><option>3 — нормально</option><option>2 — плохо</option></select></div>
+      <div class="field"><label for="fb-best">Самый полезный раздел</label><select id="fb-best"><option>Теория</option><option>Задания 2–12</option><option>Вариант</option><option>Изложение с ИИ</option></select></div>
+    </div>
+    <div class="field"><label for="fb-text">Что улучшить?</label><textarea id="fb-text" rows="3" placeholder="Что было непонятно, чего не хватило"></textarea></div>
+    <div class="row"><button class="btn ghost" id="fb-copy">Скопировать отзыв</button><span class="small muted" id="fb-msg"></span></div>
+  </div>
+</section>
+
+<!-- ТЕОРИЯ -->
+<section class="view" id="v-theory">
+  <div class="theory"><nav class="side" id="th-side"></nav><article class="sheet th-body" id="th-body"></article></div>
+</section>
+
+<!-- ПРАКТИКА -->
+<section class="view" id="v-practice">
+  <div class="prac"><nav class="tlist" id="tlist"></nav><article class="sheet" id="qbox"></article></div>
+</section>
+
+<!-- ВАРИАНТ -->
+<section class="view" id="v-variant">
+  <div class="sheet">
+    <div class="qhead"><div><h2>Тренировочный вариант: задания 2–12</h2><p class="muted" style="margin:4px 0 0">По одному заданию каждого типа, 11 баллов. Ответы проверяются в конце, как на экзамене.</p></div>
+    <div class="row"><span class="timer" id="v-timer">00:00</span><button class="btn ghost" id="v-new">Новый вариант</button></div></div>
+    <div id="v-body"></div>
+    <div class="row" style="margin-top:20px"><button class="btn" id="v-finish">Завершить и проверить</button></div>
+    <div id="v-result"></div>
+  </div>
+</section>
+
+<!-- ИЗЛОЖЕНИЕ -->
+<section class="view" id="v-izlozhenie">
+  <div class="grid" style="grid-template-columns:minmax(0,1fr)">
+  <div class="sheet">
+    <div class="qhead"><div><span class="qno">1</span><h2 style="display:inline">Сжатое изложение</h2></div><span class="pill">Не менее 70 слов</span></div>
+    <p class="muted" style="margin-top:0">Прослушайте текст дважды, затем напишите сжатое изложение, передав все микротемы. Можно включить свою аудиозапись из открытого банка ФИПИ.</p>
+    <div class="grid g2">
+      <div class="field"><label for="izl-src">Текст для изложения</label><select id="izl-src"></select></div>
+      <div class="field"><label for="izl-pause">Перерыв между прослушиваниями</label><select id="izl-pause"><option value="60">1 минута</option><option value="180" selected>3 минуты</option><option value="300">5 минут</option><option value="0">без перерыва</option></select></div>
+    </div>
+    <div id="izl-custom" hidden>
+      <div class="field"><label for="izl-file">Аудиозапись (mp3, wav, ogg)</label><input type="file" id="izl-file" accept="audio/*"></div>
+      <div class="field"><label for="izl-srctext">Исходный текст для ИИ-проверки (необязательно)</label><textarea id="izl-srctext" rows="5" placeholder="Вставьте текст аудиозаписи. Без него ИИ оценит содержание только ориентировочно."></textarea></div>
+    </div>
+    <div class="steps" id="izl-steps"><span>1. Прослушивание</span><span>Перерыв</span><span>2. Прослушивание</span><span>Написание</span><span>Проверка</span></div>
+    <div class="row" id="izl-controls"></div>
+    <p class="small muted" id="izl-status" aria-live="polite"></p>
+    <audio id="izl-audio" preload="auto"></audio>
+    <details><summary>Черновик (записи во время прослушивания)</summary><textarea class="notes" id="izl-notes" placeholder="Ключевые слова, план из трёх микротем…"></textarea></details>
+    <div class="field" style="margin-top:12px"><label for="izl-text">Изложение <span class="small muted">— абзацы разделяйте переносом строки</span></label><textarea class="essay" id="izl-text" placeholder="Начните писать здесь…"></textarea></div>
+    <div class="row" style="justify-content:space-between"><span>Слов: <span class="wc" id="izl-wc">0</span> <span class="small muted" id="izl-par"></span></span>
+      <div class="row"><button class="btn ghost" id="izl-show">Показать исходный текст</button><button class="btn" id="izl-check">Проверить с ИИ</button></div></div>
+    <div id="izl-srcbox"></div>
+    <div id="izl-result"></div>
+  </div>
+  </div>
+</section>
+
+<!-- ПРОГРЕСС -->
+<section class="view" id="v-progress">
+  <div class="sheet"><div class="row" style="justify-content:space-between"><h2>Мой прогресс</h2><span class="small muted" id="sync"></span></div><p class="muted">Что вы проходили, как справились и что стоит подтянуть.</p><div id="pg-body"></div>
+  <div class="row" style="margin-top:18px"><button class="btn ghost red" id="pg-reset" style="color:var(--red);border-color:var(--red)">Сбросить прогресс</button><span class="small muted" id="pg-msg"></span></div></div>
+</section>
+
+<!-- АДМИН (виден только администратору) -->
+<section class="view" id="v-admin">
+  <div class="grid g2">
+    <div class="sheet">
+      <h2>Настройки ИИ-проверки</h2>
+      <p class="muted small">Действуют для всех учеников. Ключ DeepSeek хранится на прокси-сервере и в браузер не попадает.</p>
+      <div class="field"><label for="ai-proxy">Адрес прокси (Cloudflare Worker)</label><input id="ai-proxy" placeholder="https://oge-proxy.имя.workers.dev"></div>
+      <div class="field"><label for="ai-model">Модель</label>
+        <select id="ai-model"><option value="deepseek-v4-pro">deepseek-v4-pro — точнее (рекомендуется)</option><option value="deepseek-flash">deepseek-flash — дешевле и быстрее</option></select></div>
+      <div class="row"><button class="btn" id="ai-save">Сохранить</button><button class="btn ghost" id="ai-test">Проверить подключение</button></div>
+      <p class="small" id="ai-msg" aria-live="polite"></p>
+    </div>
+    <div class="sheet">
+      <h2>Какую модель выбрать</h2>
+      <div class="tblwrap"><table class="tbl rec">
+        <tr><th>Модель</th><th>Для чего</th></tr>
+        <tr><td>DeepSeek V4 Pro</td><td>Основной вариант: модель с рассуждением, хорошо понимает русский. Одно изложение стоит доли цента.</td></tr>
+        <tr><td>DeepSeek Flash</td><td>Дешевле и быстрее, для черновой проверки. Чаще пропускает пунктуационные ошибки.</td></tr>
+        <tr><td>GigaChat 2 Max</td><td>Российская модель, оплата в рублях. Нужен отдельный сервер с OAuth-токеном.</td></tr>
+      </table></div>
+      <details><summary>Промпт для ИИ</summary><pre class="small" id="ai-prompt" style="white-space:pre-wrap;font-family:var(--mono)"></pre></details>
+    </div>
+  </div>
+  <div class="sheet" style="margin-top:16px">
+    <div class="row" style="justify-content:space-between"><h2>Ученики</h2><button class="btn ghost" id="adm-reload" type="button" onclick="renderAdmin()">Обновить</button></div>
+    <div id="adm-users"></div>
+  </div>
+  <div class="sheet" style="margin-top:16px" id="adm-detail" hidden>
+    <h2>Прогресс ученика</h2><p class="muted" id="adm-who"></p><div id="adm-prog"></div>
+  </div>
+</section>
+</main>
+<footer><div class="wrap">Тренажёр ОГЭ по русскому языку · учебный проект (информатика + русский язык) · Задания составлены по образцу открытого банка ФИПИ (fipi.ru)</div></footer>
+
+<script>
+/* ===== Вход по почте и паролю и хранение прогресса (Firebase) =====
+   1. Создайте проект на console.firebase.google.com и веб-приложение в нём.
+   2. Вставьте сюда объект firebaseConfig из настроек приложения.
+   Пока поля пустые, сайт работает в демо-режиме: без входа, прогресс хранится только в браузере. */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAvsZhRc_XQKCf3MVYRZyusNcPjiCVHEoU",
+  authDomain: "oge26-6f838.firebaseapp.com",
+  projectId: "oge26-6f838",
+  storageBucket: "oge26-6f838.firebasestorage.app",
+  messagingSenderId: "167884027668",
+  appId: "1:167884027668:web:6423450b21610242897401"
+};
+const FB_VER = "10.12.2";
+
+const AUTH_ERRORS = {
+  "auth/invalid-credential": "Неверная почта или пароль.",
+  "auth/wrong-password": "Неверная почта или пароль.",
+  "auth/user-not-found": "Пользователь с такой почтой не найден.",
+  "auth/invalid-email": "Почта указана с ошибкой.",
+  "auth/email-already-in-use": "Эта почта уже зарегистрирована. Войдите или восстановите пароль.",
+  "auth/weak-password": "Пароль слишком короткий: нужно не меньше 6 символов.",
+  "auth/too-many-requests": "Слишком много попыток. Подождите несколько минут.",
+  "auth/network-request-failed": "Нет связи с сервером. Проверьте интернет.",
+  "auth/missing-password": "Введите пароль.",
+  "auth/operation-not-allowed": "Вход по почте не включён: Firebase → Authentication → Sign-in method → Email/Password."
+};
+function authError(e) { return AUTH_ERRORS[e && e.code] || ("Ошибка: " + ((e && (e.message || e.code)) || e)); }
+
+const Backend = {
+  mode: "demo",          // demo — без входа; firebase — вход и облачное хранение
+  reason: "",            // nocfg — Firebase не настроен; blocked — сервис недоступен (например, на claude.ai)
+  user: null, admin: false,
+  async init() {
+    if (window.OGE_BACKEND_MOCK) { Object.assign(this, window.OGE_BACKEND_MOCK); this.mode = "firebase"; return; }
+    if (!FIREBASE_CONFIG.apiKey) { this.reason = "nocfg"; return; }
+    try {
+      const base = "https://www.gstatic.com/firebasejs/" + FB_VER + "/";
+      const [app, auth, fs] = await Promise.all([import(base + "firebase-app.js"), import(base + "firebase-auth.js"), import(base + "firebase-firestore.js")]);
+      this.fb = { auth, fs };
+      const a = app.initializeApp(FIREBASE_CONFIG);
+      this.auth = auth.getAuth(a); this.db = fs.getFirestore(a);
+      this.mode = "firebase";
+    } catch (e) { this.reason = "blocked"; }
+  },
+  onUser(cb) {
+    this.fb.auth.onAuthStateChanged(this.auth, async u => {
+      if (u) { try { await u.reload(); await u.getIdToken(true); } catch (_) {} }
+      this.user = u ? this.auth.currentUser : null;
+      this.admin = u ? await this.checkAdmin() : false;
+      cb(this.user);
+    });
+  },
+  signIn(email, pass) { return this.fb.auth.signInWithEmailAndPassword(this.auth, email, pass); },
+  async signUp(name, email, pass) {
+    const c = await this.fb.auth.createUserWithEmailAndPassword(this.auth, email, pass);
+    await this.fb.auth.updateProfile(c.user, { displayName: name });
+    try { await this.fb.auth.sendEmailVerification(c.user); } catch (_) {}
+    return c;
+  },
+  signOut() { return this.fb.auth.signOut(this.auth); },
+  reset(email) { return this.fb.auth.sendPasswordResetEmail(this.auth, email); },
+  resendVerify() { return this.fb.auth.sendEmailVerification(this.auth.currentUser); },
+  /* Администратор — тот, кому правила Firestore разрешают читать config/admin */
+  async checkAdmin() { const { fs } = this.fb; try { await fs.getDoc(fs.doc(this.db, "config", "admin")); return true; } catch (_) { return false; } },
+  async load() { const { fs } = this.fb; const s = await fs.getDoc(fs.doc(this.db, "users", this.user.uid)); return s.exists() ? s.data() : null; },
+  save(data) {
+    const { fs } = this.fb;
+    return fs.setDoc(fs.doc(this.db, "users", this.user.uid), Object.assign({}, data, { name: this.user.displayName || "", email: this.user.email || "", updatedAt: Date.now() }));
+  },
+  async listUsers() { const { fs } = this.fb; const q = await fs.getDocs(fs.collection(this.db, "users")); return q.docs.map(d => Object.assign({ uid: d.id }, d.data())); },
+  async getAI() { const { fs } = this.fb; try { const s = await fs.getDoc(fs.doc(this.db, "config", "ai")); return s.exists() ? s.data() : {}; } catch (_) { return {}; } },
+  setAI(v) { const { fs } = this.fb; return fs.setDoc(fs.doc(this.db, "config", "ai"), v); },
+  token() { return this.user.getIdToken(); }
+};
+
+</script>
+<script>
+/* ===== Данные тренажёра ОГЭ по русскому языку (формат ОГЭ-2026) =====
+   Задания составлены по образцу открытого банка ФИПИ; тексты авторские. */
+
+const MICROTEXTS = {
+  A: {
+    title: "Микротекст А",
+    s: [
+      "Осенью в нашем городском парке становится тихо и просторно.",
+      "Дорожки засыпаны листьями, и под ногами они шуршат, как старая бумага.",
+      "Мы с дедушкой любим приходить сюда по утрам, когда туман ещё не рассеялся.",
+      "Дедушка рассказывает о деревьях, которые он сажал вместе с одноклассниками больше пятидесяти лет назад.",
+      "Слушая его, я понимаю, что у каждого дерева есть своя история."
+    ]
+  },
+  B: {
+    title: "Микротекст Б",
+    s: [
+      "Летом мы с отцом отправились в поход по Карелии.",
+      "Пройдя за день почти двадцать километров, мы разбили лагерь на берегу озера.",
+      "Отец разжёг костёр, а я пошёл за водой.",
+      "Вода в озере была такой прозрачной, что на дне виднелись камни.",
+      "Этот вечер, тихий и тёплый, я запомнил надолго."
+    ]
+  },
+  C: {
+    title: "Микротекст В",
+    s: [
+      "В нашей библиотеке появился новый читальный зал.",
+      "Здесь можно не только взять книгу, но и поработать за компьютером.",
+      "Библиотекарь, заметив мой интерес, предложила записаться в клуб юных краеведов.",
+      "Я согласился, потому что давно хотел узнать историю своего района.",
+      "Теперь каждую субботу мы собираемся вместе и обсуждаем найденные документы."
+    ]
+  }
+};
+
+const MACROTEXT = {
+  title: "Текст для заданий 10–12",
+  s: [
+    "Лёша Воронов перешёл в новую школу в середине года, когда все компании в классе уже сложились.",
+    "На переменах он стоял у окна, словно часовой на посту, и делал вид, что разглядывает двор.",
+    "Ему казалось, что на него никто не обращает внимания, и от этого было одновременно легче и обиднее.",
+    "Однажды учительница литературы предложила подготовить к школьному вечеру спектакль.",
+    "Роли распределили быстро, а вот рисовать декорации никто не хотел.",
+    "Лёша поднял руку раньше, чем успел подумать.",
+    "Он с детства любил рисовать, но никогда не показывал свои альбомы чужим людям.",
+    "Целую неделю после уроков он оставался в актовом зале и работал не покладая рук.",
+    "Сначала с ним работала только тихая Вера, которая отвечала за реквизит.",
+    "Потом заглянул Костя, самый шумный мальчишка в классе, посмотрел на нарисованный замок и присвистнул:",
+    "— Слушай, да ты настоящий художник!",
+    "На следующий день Костя пришёл уже не один.",
+    "Ребята таскали фанеру, спорили о цвете неба и смеялись над кривой башней, похожей на падающий карандаш, которую Лёша потом всё-таки исправил.",
+    "Работа шла медленно, зато весело.",
+    "В вечер спектакля, когда занавес раскрылся, зал ахнул.",
+    "Лёша стоял за кулисами и чувствовал, как горят уши.",
+    "Он вдруг понял, что ждал этого не ради похвалы.",
+    "Ему просто нужно было, чтобы кто-то увидел его настоящего.",
+    "А для этого, оказывается, надо было самому сделать первый шаг."
+  ]
+};
+
+/* type: set — набор цифр, порядок не важен; seq — порядок важен; word — слово/словосочетание */
+const TASKS = {
+  "2": {
+    name: "Грамматическая основа",
+    skill: "Синтаксический анализ",
+    theory: "syntax",
+    instr: "Выберите и запишите номера верных ответов.",
+    items: [
+      { text: "A", answer: "135", hint: "Подлежащее «мы с дедушкой» — неделимое сочетание. Посчитайте основы в предложении 5: сколько там «кто? что делает?»",
+        options: [
+          ["Грамматическая основа первой части предложения 2 — «дорожки засыпаны».", "Верно: подлежащее «дорожки», сказуемое «засыпаны» (краткое причастие)."],
+          ["Грамматическая основа главной части предложения 3 — «мы любим».", "Неверно: подлежащее — «мы с дедушкой», сказуемое составное глагольное — «любим приходить»."],
+          ["Грамматическая основа придаточной части предложения 4 — «он сажал».", "Верно: в придаточном «которые он сажал» подлежащее «он», сказуемое «сажал»."],
+          ["Предложение 5 содержит одну грамматическую основу.", "Неверно: основы «я понимаю» и «история есть» — предложение сложное."],
+          ["Грамматическая основа придаточной части предложения 3 — «туман не рассеялся».", "Верно: подлежащее «туман», сказуемое «не рассеялся»."]
+        ] },
+      { text: "B", answer: "134", hint: "В предложении 5 подлежащее — не «вечер». Кто запомнил?",
+        options: [
+          ["Грамматическая основа предложения 1 — «мы с отцом отправились».", "Верно: «мы с отцом» — подлежащее-сочетание."],
+          ["Грамматическая основа предложения 2 — «мы разбили лагерь».", "Неверно: «лагерь» — дополнение, основа «мы разбили»."],
+          ["Предложение 3 имеет две грамматические основы: «отец разжёг», «я пошёл».", "Верно: это сложносочинённое предложение из двух частей."],
+          ["Грамматическая основа придаточной части предложения 4 — «камни виднелись».", "Верно: в придаточном «что на дне виднелись камни» подлежащее «камни», сказуемое «виднелись»."],
+          ["Грамматическая основа предложения 5 — «вечер запомнил».", "Неверно: «вечер» — дополнение (запомнил что?), основа «я запомнил»."]
+        ] },
+      { text: "C", answer: "234", hint: "Определение «новый» в основу не входит. Найдите, где сказуемое — однородные глаголы.",
+        options: [
+          ["Грамматическая основа предложения 1 — «появился новый зал».", "Неверно: «новый» — определение. Основа — «зал появился»."],
+          ["Предложение 2 безличное, его грамматическая основа — «можно взять, поработать».", "Верно: сказуемое «можно взять» и «(можно) поработать», подлежащего нет."],
+          ["Грамматическая основа предложения 3 — «библиотекарь предложила».", "Верно: «записаться» — дополнение (записаться должен другой человек)."],
+          ["Грамматическая основа главной части предложения 4 — «я согласился».", "Верно."],
+          ["Грамматическая основа предложения 5 — «мы собираемся».", "Неверно: сказуемых два — «собираемся и обсуждаем»."]
+        ] }
+    ]
+  },
+  "3": {
+    name: "Синтаксический анализ предложения",
+    skill: "Синтаксический анализ",
+    theory: "syntax",
+    instr: "Выберите и запишите номера верных ответов.",
+    items: [
+      { text: "A", answer: "125", hint: "«Как старая бумага» — сравнительный оборот, а не часть сложного предложения. На какой вопрос отвечает придаточное в предложении 3?",
+        options: [
+          ["Предложение 1 простое.", "Верно: одна грамматическая основа «становится тихо и просторно»."],
+          ["Предложение 2 сложносочинённое.", "Верно: две части, соединённые союзом «и»."],
+          ["Предложение 3 сложноподчинённое с придаточным определительным.", "Неверно: «когда туман ещё не рассеялся» — придаточное времени (приходить когда?)."],
+          ["Предложение 4 осложнено обособленным обстоятельством.", "Неверно: в нём есть придаточное определительное, обособленных обстоятельств нет."],
+          ["Предложение 5 осложнено обособленным обстоятельством, выраженным деепричастным оборотом.", "Верно: «слушая его»."]
+        ] },
+      { text: "B", answer: "134", hint: "Посмотрите на союз в предложении 3: «а» — сочинительный.",
+        options: [
+          ["Предложение 2 осложнено обособленным обстоятельством, выраженным деепричастным оборотом.", "Верно: «пройдя за день почти двадцать километров»."],
+          ["Предложение 3 сложноподчинённое.", "Неверно: союз «а» сочинительный, предложение сложносочинённое."],
+          ["Предложение 4 сложноподчинённое.", "Верно: «была такой прозрачной (насколько?), что на дне виднелись камни»."],
+          ["В предложении 5 есть обособленные согласованные определения.", "Верно: «тихий и тёплый» стоят после определяемого слова."],
+          ["Предложение 1 осложнено однородными членами.", "Неверно: однородных членов нет."]
+        ] },
+      { text: "C", answer: "123", hint: "«Не только..., но и...» соединяет однородные члены. Предложение 1 двусоставное: есть и подлежащее, и сказуемое.",
+        options: [
+          ["Предложение 2 простое, осложнено однородными членами.", "Верно: «не только взять..., но и поработать»."],
+          ["Предложение 3 осложнено обособленным обстоятельством.", "Верно: деепричастный оборот «заметив мой интерес»."],
+          ["Предложение 4 сложноподчинённое с придаточным причины.", "Верно: согласился почему? — потому что хотел узнать."],
+          ["Предложение 5 сложное.", "Неверно: одна основа с однородными сказуемыми."],
+          ["Предложение 1 односоставное.", "Неверно: «зал появился» — двусоставное."]
+        ] }
+    ]
+  },
+  "4": {
+    name: "Пунктуационные правила и примеры",
+    skill: "Пунктуационный анализ",
+    theory: "punct",
+    instr: "Установите соответствие между пунктуационными правилами и предложениями. Запишите цифры под буквами А, Б, В. Порядок важен.",
+    items: [
+      { answer: "214", type: "seq", hint: "Ищите: две основы с «и»; оборот с причастием «увидевший»; придаточное с «когда».",
+        rules: ["А) Запятая между частями сложносочинённого предложения.", "Б) Запятые при обособленном определении, выраженном причастным оборотом.", "В) Запятая между частями сложноподчинённого предложения."],
+        options: [
+          ["Мальчик, увидевший щенка, остановился.", "Причастный оборот → Б."],
+          ["Солнце село, и в окнах зажглись огни.", "Две основы, союз «и» → А."],
+          ["Мы шли быстро, не оглядываясь.", "Деепричастие — правило не из списка."],
+          ["Когда начался дождь, все спрятались под навесом.", "Придаточное времени → В."],
+          ["На столе лежали яблоки, груши, сливы.", "Однородные члены — правило не из списка."]
+        ] },
+      { answer: "312", type: "seq", hint: "«К счастью» — вводное. «Друзья» — к кому обращаются. «И..., и..., и...» — повторяющийся союз.",
+        rules: ["А) Запятые при вводном слове.", "Б) Запятые при обращении.", "В) Запятые при однородных членах, соединённых повторяющимся союзом."],
+        options: [
+          ["Друзья, давайте начнём репетицию!", "Обращение → Б."],
+          ["В саду росли и яблони, и вишни, и сливы.", "Повторяющийся союз «и» → В."],
+          ["К счастью, поезд не опоздал.", "Вводное слово → А."],
+          ["Он сказал, что придёт позже.", "Сложноподчинённое — правило не из списка."],
+          ["Дом, построенный дедом, стоит до сих пор.", "Причастный оборот — правило не из списка."]
+        ] },
+      { answer: "231", type: "seq", hint: "Тире ставят между подлежащим и сказуемым-существительными. Двоеточие — когда вторая часть поясняет первую.",
+        rules: ["А) Тире между подлежащим и сказуемым.", "Б) Двоеточие в бессоюзном сложном предложении.", "В) Запятая при сравнительном обороте."],
+        options: [
+          ["Снег лежал на полях, как белое покрывало.", "Сравнительный оборот с «как» → В."],
+          ["Москва — столица России.", "Подлежащее и сказуемое выражены существительными → А."],
+          ["Я понял одно: надо торопиться.", "Вторая часть раскрывает «одно» → Б."],
+          ["Наступила весна, и запели птицы.", "Сложносочинённое — правило не из списка."],
+          ["Вдали показался тёмный лес.", "Знаков нет."]
+        ] }
+    ]
+  },
+  "5": {
+    name: "Расстановка запятых",
+    skill: "Пунктуационный анализ",
+    theory: "punct",
+    instr: "Расставьте знаки препинания. Укажите цифры, на месте которых в предложении должны стоять запятые.",
+    items: [
+      { answer: "1234", sentence: "Старый мельник(1) живший у самой реки(2) знал(3) когда начнётся половодье(4) и заранее(5) укреплял плотину.",
+        hint: "Причастный оборот после слова — выделяем с двух сторон. Придаточное «когда...» тоже выделяем с двух сторон.",
+        explain: "1, 2 — причастный оборот «живший у самой реки» стоит после определяемого слова; 3, 4 — придаточное «когда начнётся половодье» внутри предложения выделяется с двух сторон; 5 — запятой нет: «знал и укреплял» — однородные сказуемые." },
+      { answer: "124", sentence: "Вечером(1) когда солнце уже скрылось за лесом(2) мы вышли на крыльцо(3) и долго слушали(4) как поют соловьи.",
+        hint: "Однородные сказуемые с одиночным «и» запятой не разделяются.",
+        explain: "1, 2 — придаточное времени уточняет «вечером»; 3 — запятой нет: «вышли и слушали» — однородные сказуемые; 4 — перед придаточным «как поют соловьи»." },
+      { answer: "1245", sentence: "Ребята(1) конечно(2) обрадовались новости(3) и(4) не теряя времени(5) начали собираться.",
+        hint: "«Конечно» — вводное слово. Деепричастный оборот может стоять сразу после союза «и».",
+        explain: "1, 2 — вводное слово «конечно»; 3 — запятой нет: однородные сказуемые «обрадовались и начали» с союзом «и»; 4, 5 — деепричастный оборот «не теряя времени»." },
+      { answer: "12345", sentence: "Тропинка(1) петлявшая между соснами(2) вывела нас к озеру(3) где(4) отражаясь в воде(5) плыли облака.",
+        hint: "После союзного слова «где» может начинаться деепричастный оборот.",
+        explain: "1, 2 — причастный оборот; 3 — перед придаточным «где...»; 4, 5 — деепричастный оборот «отражаясь в воде» внутри придаточного." },
+      { answer: "123", sentence: "Мама сказала(1) что(2) если пойдёт дождь(3) поездку перенесут(4) на воскресенье.",
+        hint: "На стыке союзов «что» и «если» запятая ставится, если дальше нет «то».",
+        explain: "1 — перед придаточным «что...»; 2 — на стыке союзов «что если» (дальше нет «то»); 3 — после придаточного условия; 4 — запятой нет." }
+    ]
+  },
+  "6": {
+    name: "Объяснение написания слов",
+    skill: "Орфографический анализ",
+    theory: "orpho",
+    instr: "Укажите варианты ответов, в которых дано верное объяснение написания выделенного слова. Запишите номера ответов.",
+    items: [
+      { answer: "123", hint: "Деревянный — слово-исключение. Можно ли подобрать к «недруг» синоним без НЕ?",
+        options: [
+          ["ПРИЕХАТЬ — приставка ПРИ- имеет значение приближения.", "Верно."],
+          ["БЕЗЗВУЧНЫЙ — на конце приставки пишется З, так как после неё стоит буква, обозначающая звонкий согласный.", "Верно."],
+          ["ЧАЩА — после шипящих Ч и Щ пишется буква А.", "Верно: ЧА–ЩА пиши с А."],
+          ["ДЕРЕВЯННЫЙ — НН пишется, так как прилагательное образовано с помощью суффикса -ЕНН-.", "Неверно: суффикс -ЯН-, а НН — потому что слово-исключение (стеклянный, оловянный, деревянный)."],
+          ["НЕДРУГ — НЕ пишется слитно, так как без НЕ слово не употребляется.", "Неверно: слово «друг» употребляется; слитно, потому что можно заменить синонимом без НЕ — «враг»."]
+        ] },
+      { answer: "134", hint: "«Лечь» — неопределённая форма, а не 2-е лицо. В «исполнить» после приставки — глухой П.",
+        options: [
+          ["ПРЕКРАСНЫЙ — приставка ПРЕ- имеет значение «очень».", "Верно: прекрасный = очень красивый."],
+          ["ЛЕЧЬ — на конце пишется Ь, так как это глагол 2-го лица единственного числа.", "Неверно: Ь пишется, потому что это неопределённая форма глагола."],
+          ["БЕЖИШЬ — на конце глагола 2-го лица единственного числа после шипящего пишется Ь.", "Верно."],
+          ["ЦЫГАН — после Ц в корне пишется Ы, это слово-исключение.", "Верно: цыган, на цыпочках, цыц, цыплёнок."],
+          ["ИСПОЛНИТЬ — на конце приставки пишется С, так как после неё стоит буква, обозначающая звонкий согласный.", "Неверно: П — глухой согласный, поэтому С."]
+        ] },
+      { answer: "245", hint: "Корень с чередованием нельзя проверять ударением. Какое правило у -ГОР-/-ГАР-?",
+        options: [
+          ["ЗАГОРЕЛЫЙ — в корне с чередованием без ударения пишется А.", "Неверно: в корне -ГОР-/-ГАР- без ударения пишется О."],
+          ["РАСТЕНИЕ — в корне с чередованием перед СТ пишется А.", "Верно: -РАСТ-/-РАЩ-/-РОС-."],
+          ["ПОКЛОНИЛСЯ — безударная гласная в корне проверяется словом «поклон».", "Неверно: это корень с чередованием -КЛАН-/-КЛОН-, проверка ударением невозможна; без ударения пишется О."],
+          ["ВЫТИРАТЬ — в корне пишется И, так как после корня стоит суффикс -А-.", "Верно: -ТЕР-/-ТИР-."],
+          ["ПЛОВЕЦ — в корне с чередованием пишется О, это слово-исключение.", "Верно: пловец, пловчиха, плывуны."]
+        ] },
+      { answer: "124", hint: "Ветреный — исключение. Есть ли в «неинтересный фильм» противопоставление?",
+        options: [
+          ["ЖАРЕНЫЙ (картофель) — в отглагольном прилагательном без приставки и зависимых слов пишется одна Н.", "Верно."],
+          ["ОРГАНИЗОВАННЫЙ — НН пишется, так как слово образовано от глагола на -ОВАТЬ.", "Верно: суффикс -ОВА- → НН."],
+          ["НЕИНТЕРЕСНЫЙ (фильм) — НЕ с прилагательным пишется раздельно, так как есть противопоставление.", "Неверно: противопоставления нет, пишется слитно (= скучный)."],
+          ["(книга, ещё) НЕ ПРОЧИТАННАЯ мной — НЕ с причастием пишется раздельно, так как есть зависимое слово.", "Верно."],
+          ["ВЕТРЕНЫЙ (день) — в суффиксе прилагательного пишется НН.", "Неверно: ветреный — исключение, пишется одна Н (но безветренный)."]
+        ] },
+      { answer: "123", hint: "В суффиксах прилагательных после шипящих под ударением — О. Молодёжь — какого рода?",
+        options: [
+          ["ЧЁРНЫЙ — в корне после шипящего под ударением пишется Ё, так как можно подобрать слово с Е (чернеть).", "Верно."],
+          ["СВЕЧОЙ — в окончании существительного после шипящего под ударением пишется О.", "Верно."],
+          ["ГОРЯЧО — на конце наречия после шипящего под ударением пишется О.", "Верно."],
+          ["ЕЖОВЫЙ — в суффиксе прилагательного после шипящего под ударением пишется Ё.", "Неверно: в суффиксах прилагательных под ударением пишется О."],
+          ["МОЛОДЁЖЬ — на конце существительного после шипящего пишется Ь, так как оно мужского рода.", "Неверно: Ь пишется, потому что слово женского рода 3-го склонения."]
+        ] }
+    ]
+  },
+  "7": {
+    name: "Пропущенные буквы",
+    skill: "Орфографический анализ",
+    theory: "orpho",
+    instr: "Укажите номера, на месте которых пишется указанная буква.",
+    items: [
+      { letter: "И", answer: "24", sentence: "Оз(1)рённые солнцем поля, зам(2)рающий вдали звук, бл(3)стящий лёд, выт(4)рать пыль, соч(5)тание цветов.",
+        hint: "Корни -ЗАР-/-ЗОР-, -МЕР-/-МИР-, -БЛЕСТ-/-БЛИСТ-, -ТЕР-/-ТИР-, -ЧЕТ-/-ЧИТ-. И пишется перед суффиксом -А-. Помните исключение «сочетать».",
+        explain: "1 — озАрённые (без ударения -ЗАР-); 2 — замИрающий (суффикс -А-); 3 — блЕстящий (нет суффикса -А-); 4 — вытИрать (суффикс -А-); 5 — сочЕтание (исключение)." },
+      { letter: "Е", answer: "135", sentence: "Пр(1)одолеть трудности, пр(2)брежный посёлок, пр(3)красный вид, пр(4)открыть дверь, пр(5)вращение воды в лёд.",
+        hint: "ПРЕ- = «очень» или «пере-». ПРИ- = приближение, близость, неполнота действия.",
+        explain: "1 — прЕодолеть (= переодолеть); 2 — прИбрежный (близость); 3 — прЕкрасный (= очень); 4 — прИоткрыть (неполнота); 5 — прЕвращение (= переделать)." },
+      { letter: "Е", answer: "15", sentence: "Ветер колыш(1)т траву, вы стро(2)те шалаш, сосед кле(3)т обои, мы слыш(4)м шум, ты бор(5)шься с усталостью.",
+        hint: "Определите спряжение по неопределённой форме: колыхать, строить, клеить, слышать, бороться. «Слышать» — исключение.",
+        explain: "1 — колышЕт (I спр.); 2 — строИте (II спр.); 3 — клеИт (на -ить, II спр.); 4 — слышИм (исключение, II спр.); 5 — борЕшься (I спр.)." },
+      { letter: "Е", answer: "134", sentence: "Замоч(1)к, ключ(2)к, горош(3)к, письм(4)цо, плать(5)це.",
+        hint: "Если гласная при изменении слова выпадает — пишем -ЕК-. В среднем роде: ударение на окончании → -ЕЦ-, на основе → -ИЦ-.",
+        explain: "1 — замочЕк (замочка); 2 — ключИк (ключика); 3 — горошЕк (горошка); 4 — письмЕцо (ударение на окончании); 5 — платьИце (ударение на основе)." },
+      { letter: "И", answer: "245", sentence: "З(1)мля, пос(2)деть у окна, пос(3)деть от старости, пол(4)вать цветы, уд(5)вительный случай.",
+        hint: "Подберите проверочные слова: зéмли, сидя, седой, лить, диво.",
+        explain: "1 — зЕмля (зéмли); 2 — посИдеть (сидя); 3 — посЕдеть (седой); 4 — полИвать (лить); 5 — удИвительный (диво)." }
+    ]
+  },
+  "8": {
+    name: "Формы слова",
+    skill: "Нормы языка",
+    theory: "norms",
+    instr: "Раскройте скобки и запишите слово в соответствующей форме, соблюдая нормы современного русского литературного языка.",
+    items: [
+      { answer: ["пятисот"], sentence: "В конкурсе приняли участие около (пятьсот) учеников.", hint: "Около кого? Чего? — Родительный падеж. Склоняются обе части числительного.", explain: "Около пятисот (пяти + сот)." },
+      { answer: ["туфель"], sentence: "В магазине не оказалось подходящих (туфли).", hint: "Родительный падеж множественного числа: нет чего?", explain: "Правильно: нет туфель (как и: нет сапог, ботинок, чулок)." },
+      { answer: ["легче"], sentence: "Вторая задача оказалась (лёгкий) первой. (Запишите простую сравнительную степень.)", hint: "Простая сравнительная степень от «лёгкий» образуется с чередованием.", explain: "Легче. Ошибка — «более легче»: две формы нельзя смешивать." },
+      { answer: ["помидоров"], sentence: "Бабушка купила два килограмма (помидоры).", hint: "Овощи и фрукты в родительном падеже множественного числа обычно имеют окончание -ОВ.", explain: "Помидоров (как и: апельсинов, мандаринов, но: яблок)." },
+      { answer: ["обеим"], sentence: "Учитель вручил грамоты (обе) ученицам.", hint: "Числительное «обе» (женский род) в дательном падеже.", explain: "Обеим ученицам (женский род: обеих, обеим, обеими)." },
+      { answer: ["поезжайте"], sentence: "(Ехать) осторожнее, дорога скользкая! (Повелительное наклонение, обращение к нескольким людям.)", hint: "Формы «ехай», «едь» — ненормативные.", explain: "Поезжайте. Правильные формы: поезжай, поезжайте." }
+    ]
+  },
+  "9": {
+    name: "Замена словосочетания",
+    skill: "Синтаксический анализ словосочетания",
+    theory: "norms",
+    instr: "Замените словосочетание, построенное на основе управления, синонимичным словосочетанием со связью согласование. Запишите получившееся словосочетание.",
+    items: [
+      { answer: ["кирпичный дом", "кирпичныйдом"], sentence: "Дом из кирпича", hint: "Главное слово «дом» остаётся. Из чего сделан? — Нужно прилагательное.", explain: "Кирпичный дом: главное слово «дом», зависимое прилагательное согласуется с ним в роде, числе и падеже." },
+      { answer: ["яблочный сок", "яблочныйсок"], sentence: "Сок из яблок", hint: "Образуйте прилагательное от «яблоко».", explain: "Яблочный сок." },
+      { answer: ["заячьи уши", "заячьиуши"], sentence: "Уши зайца", hint: "Притяжательное прилагательное от «заяц».", explain: "Заячьи уши." },
+      { answer: ["шерстяной шарф", "шерстянойшарф"], sentence: "Шарф из шерсти", hint: "Прилагательное с суффиксом -ЯН-.", explain: "Шерстяной шарф (одна Н в суффиксе -ЯН-)." },
+      { answer: ["лесная дорога", "леснаядорога"], sentence: "Дорога в лесу", hint: "Какая дорога?", explain: "Лесная дорога." }
+    ]
+  },
+  "10": {
+    name: "Анализ содержания текста",
+    skill: "Работа с текстом",
+    theory: "text",
+    macro: true,
+    instr: "Какие из высказываний соответствуют содержанию текста? Укажите номера ответов.",
+    items: [
+      { answer: "24", hint: "Перечитайте предложения 1, 9 и 17.",
+        options: [
+          ["Лёша перешёл в новую школу в начале учебного года.", "Неверно: в середине года (предл. 1)."],
+          ["Лёша вызвался рисовать декорации, хотя раньше не показывал свои рисунки посторонним.", "Верно (предл. 6–7)."],
+          ["Первым Лёше помогать стал Костя.", "Неверно: сначала с ним работала Вера (предл. 9)."],
+          ["Ребята смеялись над кривой башней, но Лёша её исправил.", "Верно (предл. 13)."],
+          ["Лёша понял, что главным для него была похвала зрителей.", "Неверно: он ждал этого «не ради похвалы» (предл. 17)."]
+        ] },
+      { answer: "123", hint: "Сколько длилась работа? Что сказано о Лёше и рисовании в предложении 7?",
+        options: [
+          ["На переменах Лёша стоял у окна.", "Верно (предл. 2)."],
+          ["Учительница литературы предложила подготовить спектакль.", "Верно (предл. 4)."],
+          ["Костя назвал Лёшу настоящим художником.", "Верно (предл. 11)."],
+          ["Ребята закончили декорации за один вечер.", "Неверно: работа шла целую неделю (предл. 8)."],
+          ["Лёша не любил рисовать.", "Неверно: любил с детства (предл. 7)."]
+        ] }
+    ]
+  },
+  "11": {
+    name: "Средства выразительности",
+    skill: "Работа с текстом",
+    theory: "text",
+    macro: true,
+    items: [
+      { instr: "Укажите варианты ответов, в которых средством выразительности речи является сравнение.", answer: "13",
+        hint: "Сравнение вводится словами «как», «словно», «будто», «похожий на».",
+        options: [
+          ["…стоял у окна, словно часовой на посту…", "Сравнение со «словно»."],
+          ["…зал ахнул.", "Метонимия: «зал» — зрители в зале."],
+          ["…над кривой башней, похожей на падающий карандаш…", "Сравнение со словами «похожий на»."],
+          ["…чувствовал, как горят уши.", "Фразеологизм («уши горят» — от волнения, смущения). «Как» здесь — союз, а не сравнение."],
+          ["Работа шла медленно, зато весело.", "Средства выразительности нет."]
+        ] },
+      { instr: "Укажите варианты ответов, в которых средством выразительности речи является фразеологизм.", answer: "24",
+        hint: "Фразеологизм — устойчивое сочетание, значение которого не складывается из значений слов.",
+        options: [
+          ["…зал ахнул.", "Метонимия."],
+          ["…работал не покладая рук.", "Фразеологизм: «усердно, без отдыха»."],
+          ["…словно часовой на посту…", "Сравнение."],
+          ["…чувствовал, как горят уши.", "Фразеологизм: «горят уши» — от смущения, волнения."],
+          ["Работа шла медленно, зато весело.", "Средства выразительности нет."]
+        ] }
+    ]
+  },
+  "12": {
+    name: "Лексический анализ",
+    skill: "Работа с текстом",
+    theory: "text",
+    macro: true,
+    items: [
+      { instr: "В предложениях 8–9 найдите слово со значением «предметы, необходимые для постановки спектакля». Выпишите это слово.", answer: ["реквизит"],
+        hint: "За это отвечала Вера.", explain: "Реквизит (предложение 9)." },
+      { instr: "В предложении 1 найдите синоним к слову «группы (друзей)». Выпишите этот синоним.", answer: ["компании"],
+        hint: "«Все … в классе уже сложились».", explain: "Компании (предложение 1)." },
+      { instr: "В предложении 16 найдите фразеологизм. Выпишите этот фразеологизм.", answer: ["горят уши", "горятуши"],
+        hint: "Так говорят о человеке, который сильно смущается или волнуется.", explain: "Горят уши (предложение 16)." }
+    ]
+  }
+};
+
+/* ===== Тексты для изложения (авторские, в формате ФИПИ: ~190 слов, 3 абзаца) ===== */
+const IZL_TEXTS = [
+  {
+    id: "reading",
+    title: "Зачем читать книги",
+    paragraphs: [
+      "Сегодня многие подростки уверены, что читать книги необязательно: любую информацию можно за секунду найти в интернете. Короткие видео, новости в лентах, яркие картинки — всё это быстро привлекает внимание и так же быстро забывается. Мы привыкаем потреблять информацию маленькими порциями и разучиваемся сосредоточенно думать.",
+      "Книга устроена иначе. Она не торопит читателя, а приглашает его к неспешному разговору. Читая роман, мы проживаем вместе с героями чужие судьбы, учимся понимать мотивы поступков, сочувствовать, сомневаться, делать выбор. Писатель не даёт готовых ответов, он заставляет нас искать их самостоятельно. Именно поэтому хорошая книга развивает не только память и речь, но и душу.",
+      "Конечно, никто не призывает отказаться от современных технологий. Они делают жизнь удобнее, и глупо было бы этого не признавать. Но важно помнить, что умение читать вдумчиво — это навык, который требует постоянной тренировки. Человек, который не расстаётся с книгой, способен глубже понимать других людей и самого себя. А значит, чтение остаётся одним из самых надёжных способов стать по-настоящему взрослым."
+    ],
+    micro: [
+      "Многие подростки считают чтение необязательным: привыкают к коротким порциям информации и теряют способность сосредоточенно думать.",
+      "Книга ведёт с читателем неспешный разговор: помогает прожить чужие судьбы, понять мотивы поступков, учит сочувствовать и делать выбор; не даёт готовых ответов и поэтому развивает душу.",
+      "Технологии полезны, но вдумчивое чтение — навык, требующий тренировки; читающий человек глубже понимает себя и других, поэтому чтение помогает стать взрослым."
+    ]
+  },
+  {
+    id: "friendship",
+    title: "Что такое настоящая дружба",
+    paragraphs: [
+      "Что такое настоящая дружба? На этот вопрос каждый отвечает по-своему. Одни считают другом того, с кем весело проводить время. Другие уверены, что друг познаётся только в беде. Но, пожалуй, главное в дружбе — это доверие, умение открыть другому человеку своё сердце и не бояться, что тебя осудят или высмеют.",
+      "Дружба не возникает сама собой, её нужно строить годами. Она требует внимания, терпения и готовности уступать. Бывает, что друзья ссорятся, обижаются, даже на время перестают общаться. Однако настоящая дружба выдерживает испытания, потому что держится не на выгоде, а на искреннем интересе друг к другу. Друг радуется твоим успехам так же, как своим, и не завидует.",
+      "В наше время многие называют друзьями сотни людей в социальных сетях. Но виртуальные друзья редко приходят на помощь в трудную минуту. Настоящих друзей у человека обычно немного, и это естественно: на глубокие отношения нужно тратить силы и время. Тот, кто сумел сохранить дружбу на долгие годы, владеет настоящим богатством, которое нельзя купить ни за какие деньги."
+    ],
+    micro: [
+      "Каждый понимает дружбу по-своему, но главное в ней — доверие, возможность открыть сердце, не боясь осуждения.",
+      "Дружбу строят годами, она требует внимания и терпения; настоящая дружба выдерживает ссоры, потому что основана на искреннем интересе, а не на выгоде; друг не завидует.",
+      "Виртуальные друзья редко помогают в беде; настоящих друзей немного, ведь глубокие отношения требуют сил и времени; сохранённая дружба — богатство, которое нельзя купить."
+    ]
+  },
+  {
+    id: "mistakes",
+    title: "Умение признавать ошибки",
+    paragraphs: [
+      "Каждый человек хотя бы раз в жизни ошибался. Кто-то принимал неверное решение, кто-то обижал близких необдуманным словом, кто-то не сдерживал обещаний. Ошибки — неизбежная часть жизни, и бояться их не стоит. Гораздо страшнее не уметь их признавать.",
+      "Признать свою неправоту бывает очень трудно. Мешают гордость, страх показаться слабым, нежелание выглядеть смешным в глазах окружающих. Поэтому многие предпочитают искать виноватых вокруг: обстоятельства, других людей, неудачное стечение событий. Но тот, кто постоянно оправдывается, лишает себя возможности чему-то научиться. Ведь ошибка, которую мы не заметили или не захотели заметить, обязательно повторится.",
+      "Умение сказать «я был неправ» — признак силы, а не слабости. Такой человек вызывает уважение, потому что он честен перед собой и другими. Он делает выводы, исправляет то, что можно исправить, и становится мудрее. Недаром говорят, что умный учится на чужих ошибках, а глупый не учится даже на своих."
+    ],
+    micro: [
+      "Все люди ошибаются, ошибки неизбежны, и бояться их не стоит; страшнее — не уметь их признавать.",
+      "Признать неправоту трудно из-за гордости и страха показаться слабым, поэтому люди ищут виноватых вокруг; но тот, кто оправдывается, не учится, и непризнанная ошибка повторится.",
+      "Умение признать неправоту — признак силы; такой человек вызывает уважение, делает выводы, исправляет ошибки и становится мудрее."
+    ]
+  }
+];
+
+/* ===== Критерии ФИПИ 2026 (сжатое изложение + грамотность) ===== */
+const CRITERIA = {
+  IK1: { name: "Содержание изложения", max: 2, levels: [
+    [2, "Точно передано основное содержание, отражены все важные микротемы."],
+    [1, "Основное содержание передано, но упущена или добавлена одна микротема."],
+    [0, "Упущено или добавлено более одной микротемы."]] },
+  IK2: { name: "Сжатие исходного текста", max: 2, levels: [
+    [2, "Приёмы сжатия правильно применены на протяжении всего текста."],
+    [1, "Приёмы сжатия правильно применены к двум микротемам."],
+    [0, "Приёмы сжатия применены к одной микротеме или не применялись."]] },
+  IK3: { name: "Логичность речи", max: 2, levels: [
+    [2, "Логических ошибок нет."],
+    [1, "Одна-две логические ошибки."],
+    [0, "Три логические ошибки или более."]] },
+  GK1: { name: "Орфографические нормы", max: 3 },
+  GK2: { name: "Пунктуационные нормы", max: 3 },
+  GK3: { name: "Грамматические нормы", max: 3 },
+  GK4: { name: "Речевые нормы", max: 3 },
+  FK1: { name: "Фактическая точность речи", max: 1 }
+};
+/* ГК1–ГК4: 0 ошибок — 3; 1–2 — 2; 3–4 — 1; 5 и более — 0. ФК1: нет ошибок — 1, есть — 0. */
+function gkScore(n) { return n === 0 ? 3 : n <= 2 ? 2 : n <= 4 ? 1 : 0; }
+
+</script>
+<script>
+/* ===== Теория: правила по заданиям ОГЭ ===== */
+const THEORY = [
+  {
+    id: "izl", title: "Сжатое изложение", tasks: "Задание 1", html: `
+<p>Текст (около 150–200 слов, обычно 3 абзаца) звучит в аудиозаписи <b>два раза</b>. Изложение пишется объёмом <b>не менее 70 слов</b>; если слов меньше — 0 баллов по всем критериям изложения. Максимум за задание — <b>6 баллов</b>.</p>
+<h4>Алгоритм</h4>
+<ol>
+<li><b>Первое прослушивание.</b> Определите тему и основную мысль. Записывайте ключевые слова, оставляйте пустые строки между абзацами.</li>
+<li><b>Перерыв.</b> Разделите записи на три микротемы (микротема = абзац). Отметьте, что упустили.</li>
+<li><b>Второе прослушивание.</b> Дополните пропуски, проверьте границы абзацев.</li>
+<li><b>Черновик.</b> Сожмите каждую микротему 1–3 предложениями, свяжите абзацы.</li>
+<li><b>Проверка.</b> Посчитайте слова (≥ 70), проверьте орфографию по словарю (им можно пользоваться на экзамене), пунктуацию и повторы.</li>
+</ol>
+<h4>Приёмы сжатия</h4>
+<table class="tbl"><tr><th>Приём</th><th>Что делаем</th><th>Пример</th></tr>
+<tr><td>Исключение</td><td>Убираем повторы, второстепенные подробности, один из синонимов, уточнения.</td><td>«Короткие видео, новости в лентах, яркие картинки…» → «Короткие видео и новости…»</td></tr>
+<tr><td>Обобщение</td><td>Заменяем однородные члены общим словом, фрагмент — обобщающим выражением.</td><td>«учимся понимать, сочувствовать, сомневаться» → «книга воспитывает чувства»</td></tr>
+<tr><td>Упрощение</td><td>Сливаем предложения, заменяем сложное простым, прямую речь — косвенной.</td><td>«Он сказал: “Я приду”» → «Он пообещал прийти»</td></tr></table>
+<h4>Критерии ФИПИ (2026)</h4>
+<table class="tbl"><tr><th>Критерий</th><th>2</th><th>1</th><th>0</th></tr>
+<tr><td>ИК1 Содержание</td><td>все микротемы</td><td>упущена / добавлена 1</td><td>упущено более 1</td></tr>
+<tr><td>ИК2 Сжатие</td><td>во всех микротемах</td><td>в двух</td><td>в одной или нигде</td></tr>
+<tr><td>ИК3 Логичность речи</td><td>нет логических ошибок</td><td>1–2 ошибки</td><td>3 и более</td></tr></table>
+<p class="note">Нарушение абзацного членения считается логической ошибкой. Грамматические и речевые ошибки на ИК3 не влияют — они учитываются в ГК3 и ГК4.</p>`
+  },
+  {
+    id: "syntax", title: "Синтаксис", tasks: "Задания 2–3", html: `
+<h4>Грамматическая основа (задание 2)</h4>
+<ul>
+<li><b>Подлежащее</b> отвечает на вопрос «кто? что?». Может быть сочетанием: <i>мы с дедушкой, двое друзей, каждый из нас</i>.</li>
+<li><b>Сказуемое</b>: простое глагольное (<i>сажал</i>), составное глагольное — вспомогательный глагол + инфинитив (<i>любим приходить, начал читать</i>), составное именное — связка + именная часть (<i>был прозрачным, стал врачом</i>).</li>
+<li>Инфинитив входит в сказуемое, только если действие совершает тот же человек: <i>я хочу петь</i> (сказуемое) — <i>мама попросила меня петь</i> (дополнение).</li>
+<li>Определения и дополнения в основу не входят: в «появился новый зал» основа — <i>зал появился</i>.</li>
+<li>Односоставные предложения: определённо-личные (<i>Иду домой</i>), неопределённо-личные (<i>В дверь постучали</i>), безличные (<i>Смеркается. Мне холодно. Можно войти</i>), назывные (<i>Ночь.</i>).</li>
+</ul>
+<h4>Виды предложений (задание 3)</h4>
+<table class="tbl"><tr><th>Тип</th><th>Признак</th><th>Пример</th></tr>
+<tr><td>Сложносочинённое</td><td>союзы и, а, но, да, или, зато</td><td>Отец разжёг костёр, а я пошёл за водой.</td></tr>
+<tr><td>Сложноподчинённое</td><td>что, чтобы, когда, потому что, который, если, где…</td><td>Я понимаю, что у дерева есть история.</td></tr>
+<tr><td>Бессоюзное</td><td>части без союзов</td><td>Я понял одно: надо торопиться.</td></tr></table>
+<p><b>Типы придаточных:</b> определительное (какой? — <i>который</i>), изъяснительное (вопросы падежей — <i>что, будто, чтобы</i>), обстоятельственные: времени (когда?), места (где?), причины (почему? — <i>потому что, так как</i>), цели (зачем? — <i>чтобы</i>), условия (при каком условии? — <i>если</i>), уступки (несмотря на что? — <i>хотя</i>), следствия (<i>так что</i>), меры и степени (насколько? — <i>такой…, что</i>).</p>
+<p><b>Осложнения простого предложения:</b> однородные члены, обособленные определения и обстоятельства, вводные слова, обращения, сравнительные обороты.</p>
+<p class="note">Ловушка: сравнительный оборот «как старая бумага» не делает предложение сложным — в нём нет основы.</p>`
+  },
+  {
+    id: "punct", title: "Пунктуация", tasks: "Задания 4–5", html: `
+<h4>Простое осложнённое предложение</h4>
+<ul>
+<li><b>Причастный оборот</b> выделяется, если стоит <u>после</u> определяемого слова: <i>Мельник, живший у реки, знал…</i> Перед словом — не выделяется: <i>Живший у реки мельник знал…</i></li>
+<li><b>Деепричастие и деепричастный оборот</b> выделяются всегда: <i>Слушая его, я понимаю…</i> Кроме фразеологизмов: <i>работал спустя рукава, бежал сломя голову</i>.</li>
+<li><b>Однородные члены</b>: запятая при бессоюзной связи, перед а, но, да (= но), при повторяющихся союзах <i>и…, и…</i>. При одиночном «и» запятой нет.</li>
+<li><b>Вводные слова</b>: <i>конечно, к счастью, во-первых, по-моему, кажется, оказывается, наверное</i>. <u>Не</u> являются вводными: <i>вдруг, ведь, вот, вряд ли, даже, именно, как будто, якобы, почти, приблизительно</i>.</li>
+<li><b>Обращения</b> выделяются: <i>Друзья, давайте начнём!</i></li>
+<li><b>Сравнительный оборот</b> (<i>как, словно, будто, точно</i>) выделяется: <i>Снег лежал, как покрывало.</i> Не выделяются фразеологизмы: <i>как снег на голову, как две капли воды</i>.</li>
+</ul>
+<h4>Сложное предложение</h4>
+<ul>
+<li><b>ССП</b>: запятая перед <i>и, а, но</i> между частями. Нет запятой, если у частей общий второстепенный член: <i>Вечером зажглись фонари и стало светло.</i></li>
+<li><b>СПП</b>: придаточное отделяется запятыми с обеих сторон.</li>
+<li><b>Стык союзов</b>: <i>что, если…</i> — запятая ставится, если дальше нет «то», «так»: <i>Мама сказала, что, если пойдёт дождь, поездку перенесут.</i> Но: <i>что если пойдёт дождь, то…</i></li>
+<li><b>БСП</b>: двоеточие — вторая часть объясняет причину, поясняет или дополняет (<i>Я понял одно: надо торопиться</i>); тире — противопоставление, следствие, время или условие (<i>Солнце взошло — туман рассеялся</i>).</li>
+<li><b>Тире между подлежащим и сказуемым</b>, выраженными существительными в именительном падеже: <i>Москва — столица России.</i></li>
+</ul>`
+  },
+  {
+    id: "orpho", title: "Орфография", tasks: "Задания 6–7", html: `
+<p class="lead">Самый трудный блок: задания 6–7 решают меньше всего девятиклассников. Учите не слова, а правило и способ проверки.</p>
+<h4>Приставки</h4>
+<ul>
+<li><b>З/С</b> (без-, воз-, вз-, из-, низ-, раз-, роз-, через-): перед звонким и гласным — З (<i>беззвучный, разбить</i>), перед глухим — С (<i>бесплатный, расписание</i>). Приставка С- всегда С: <i>сделать</i>.</li>
+<li><b>ПРЕ-</b> = «очень» (<i>прекрасный</i>) или «пере-» (<i>преодолеть, превратить</i>).</li>
+<li><b>ПРИ-</b> = приближение (<i>приехать</i>), присоединение (<i>пришить</i>), близость (<i>прибрежный</i>), неполнота действия (<i>приоткрыть</i>).</li>
+<li><b>Ы после приставок</b> на согласный: <i>розыск, безыдейный</i>. Но: <i>взимать</i>, сверх- и меж- (<i>сверхинтересный, межинститутский</i>).</li>
+</ul>
+<h4>Корни с чередованием</h4>
+<table class="tbl"><tr><th>Корни</th><th>Правило</th><th>Исключения</th></tr>
+<tr><td>-лаг- / -лож-</td><td>перед Г — А, перед Ж — О</td><td>полог</td></tr>
+<tr><td>-раст- / -ращ- / -рос-</td><td>перед СТ, Щ — А, иначе О</td><td>росток, ростовщик, отрасль, Ростов</td></tr>
+<tr><td>-скак- / -скоч-</td><td>перед К — А, перед Ч — О</td><td>скачок, скачу</td></tr>
+<tr><td>-гар- / -гор-</td><td>без ударения — О</td><td>выгарки, изгарь, пригарь</td></tr>
+<tr><td>-зар- / -зор-</td><td>без ударения — А</td><td>зоревать, зорянка</td></tr>
+<tr><td>-клан- / -клон-, -твар- / -твор-</td><td>без ударения — О</td><td>утварь</td></tr>
+<tr><td>-плав- / -плов-</td><td>А</td><td>пловец, пловчиха, плывуны</td></tr>
+<tr><td>-мак- / -моч-</td><td>мак — «погружать в жидкость», моч — «пропускать жидкость»</td><td></td></tr>
+<tr><td>-равн- / -ровн-</td><td>равн — «равный», ровн — «гладкий»</td><td>равнина, поровну, ровесник, уровень</td></tr>
+<tr><td>-бер-/-бир-, -дер-/-дир-, -мер-/-мир-, -пер-/-пир-, -тер-/-тир-, -блест-/-блист-, -жег-/-жиг-, -стел-/-стил-, -чет-/-чит-</td><td>И — если после корня суффикс -А-</td><td>сочетать, сочетание, чета</td></tr>
+<tr><td>-кас- / -кос-</td><td>А — перед суффиксом -А-</td><td></td></tr></table>
+<p class="note">Корень с чередованием нельзя проверять ударением: «поклониться» не проверяется словом «поклон».</p>
+<h4>О — Ё после шипящих</h4>
+<ul>
+<li>В корне под ударением — Ё, если есть однокоренное слово с Е: <i>жёлтый — желтеть</i>. Иначе О: <i>шорох, крыжовник</i>.</li>
+<li>В окончаниях и суффиксах существительных, прилагательных, наречий под ударением — О: <i>свечой, ежовый, горячо</i>.</li>
+<li>В глаголах и словах от глаголов — Ё: <i>сжёг, тушёнка, ночёвка</i>.</li>
+</ul>
+<h4>Ь после шипящих</h4>
+<ul>
+<li>Существительные: женский род 3-го склонения — Ь (<i>ночь, молодёжь</i>), мужской — без Ь (<i>мяч</i>), родительный падеж мн. ч. — без Ь (<i>туч, рощ</i>).</li>
+<li>Глаголы — всегда Ь: <i>беречь, бежишь, спрячься</i>.</li>
+<li>Краткие прилагательные — без Ь: <i>горяч, свеж</i>. Наречия — с Ь: <i>вскачь</i> (кроме <i>уж, замуж, невтерпёж</i>).</li>
+</ul>
+<h4>Н и НН</h4>
+<ul>
+<li>Суффиксы -ан-, -ян-, -ин- — одна Н: <i>кожаный, шерстяной, гусиный</i>. Исключения: <i>стеклянный, оловянный, деревянный</i>.</li>
+<li>Суффиксы -онн-, -енн- — НН: <i>станционный, клюквенный</i>. Исключение: <i>ветреный</i> (но <i>безветренный</i>).</li>
+<li>На стыке корня на Н и суффикса -Н-: <i>длинный, каменный</i>.</li>
+<li>Отглагольные прилагательные — одна Н, если нет приставки (кроме НЕ-), зависимых слов и суффиксов -ова-/-ева-: <i>жареный картофель</i>. Иначе — НН: <i>зажаренный, жаренный на масле, организованный</i>. Исключения с НН: <i>желанный, медленный, невиданный, неслыханный, священный, нечаянный, нежданный</i>.</li>
+<li>Краткие причастия — одна Н: <i>книга прочитана</i>.</li>
+</ul>
+<h4>НЕ с разными частями речи</h4>
+<ul>
+<li>С существительными, прилагательными, наречиями на -о — слитно, если без НЕ не употребляется (<i>нелепый</i>) или можно заменить синонимом без НЕ (<i>недруг = враг, неинтересный = скучный</i>). Раздельно — при противопоставлении с «а» (<i>не друг, а враг</i>) и со словами <i>далеко не, вовсе не, отнюдь не</i>.</li>
+<li>С глаголами и деепричастиями — раздельно (<i>не знал, не зная</i>), кроме <i>ненавидеть, негодовать, недоумевать</i> и глаголов с недо- (<i>недосыпать</i>).</li>
+<li>С полными причастиями — слитно без зависимых слов (<i>непрочитанная книга</i>), раздельно при зависимых словах (<i>не прочитанная мной книга</i>). С краткими — раздельно.</li>
+</ul>
+<h4>Окончания глаголов и суффиксы причастий</h4>
+<ul>
+<li><b>II спряжение</b>: глаголы на -ить (кроме <i>брить, стелить</i>), 7 на -еть (<i>смотреть, видеть, ненавидеть, терпеть, обидеть, зависеть, вертеть</i>) и 4 на -ать (<i>гнать, держать, дышать, слышать</i>). Окончания -ишь, -ит, -им, -ите, -ат/-ят. Остальные — I спряжение: -ешь, -ет, -ем, -ете, -ут/-ют.</li>
+<li>Причастия настоящего времени: I спр. — -ущ-/-ющ-, -ем- (<i>колышущий, колеблемый</i>); II спр. — -ащ-/-ящ-, -им- (<i>строящий, видимый</i>).</li>
+<li>Перед -вш- сохраняется гласная инфинитива: <i>клеить → клеивший</i>.</li>
+</ul>
+<h4>Суффиксы существительных</h4>
+<ul>
+<li>-ек- — если гласная выпадает (<i>замочек — замочка</i>), -ик- — не выпадает (<i>ключик — ключика</i>).</li>
+<li>Средний род: -ец- при ударении на окончании (<i>письмецо</i>), -иц- при ударении на основе (<i>платьице</i>).</li>
+<li>-чик- после д, т, з, с, ж (<i>переводчик, разносчик</i>), иначе -щик- (<i>сварщик</i>).</li>
+</ul>`
+  },
+  {
+    id: "norms", title: "Нормы и словосочетания", tasks: "Задания 8–9", html: `
+<h4>Формы слова (задание 8)</h4>
+<ul>
+<li><b>Числительные:</b> в составных склоняется каждое слово: <i>около пятисот, с пятьюстами двадцатью тремя</i>. <i>Оба</i> (м. и ср. р.) — <i>обоих, обоим</i>; <i>обе</i> (ж. р.) — <i>обеих, обеим</i>. Собирательные (<i>двое, трое</i>) не сочетаются с существительными женского рода: <i>три подруги</i>, а не «трое подруг».</li>
+<li><b>Родительный падеж мн. ч.</b> без окончания: <i>сапог, ботинок, туфель, чулок, валенок, погон, яблок, полотенец, мест</i>; национальности: <i>грузин, армян, башкир</i>; с -ов: <i>носков, помидоров, апельсинов, мандаринов, рельсов, джинсов</i>.</li>
+<li><b>Степени сравнения</b>: простая (<i>легче</i>) или составная (<i>более лёгкий</i>), но не «более легче». <i>Хороший — лучше, плохой — хуже</i>.</li>
+<li><b>Повелительное наклонение</b>: <i>поезжай(те), ляг(те), положи(те)</i>. Ненормативно: «ехай», «ложи», «лягай».</li>
+<li><b>Глаголы</b>: <i>махать — машет, полоскать — полощет, лечь — ляжет</i>.</li>
+</ul>
+<h4>Виды связи в словосочетании (задание 9)</h4>
+<table class="tbl"><tr><th>Связь</th><th>Зависимое слово</th><th>Пример</th></tr>
+<tr><td>Согласование</td><td>прилагательное, причастие, местоимение, порядковое числительное — повторяет род, число, падеж</td><td>кирпичный дом, мой брат</td></tr>
+<tr><td>Управление</td><td>существительное или местоимение в падеже, который требует главное слово</td><td>дом из кирпича, читать книгу</td></tr>
+<tr><td>Примыкание</td><td>неизменяемое слово: наречие, деепричастие, инфинитив</td><td>читать вслух, шёл улыбаясь</td></tr></table>
+<p><b>Как заменить управление на согласование:</b> главное слово оставьте, зависимое существительное превратите в прилагательное и согласуйте: <i>уши зайца → заячьи уши, сок из яблок → яблочный сок</i>. Проверьте орфографию нового прилагательного (<i>шерстяной</i> — одна Н).</p>`
+  },
+  {
+    id: "text", title: "Работа с текстом", tasks: "Задания 10–12", html: `
+<h4>Задание 10 — содержание</h4>
+<p>Сверяйте каждое утверждение с конкретным предложением текста. Неверные варианты часто меняют одну деталь: время, порядок событий, кто совершил действие, «не» на «да».</p>
+<h4>Задание 11 — средства выразительности</h4>
+<table class="tbl"><tr><th>Средство</th><th>Как узнать</th><th>Пример</th></tr>
+<tr><td>Эпитет</td><td>образное определение</td><td>золотая осень</td></tr>
+<tr><td>Сравнение</td><td>как, словно, будто, точно, похожий на</td><td>стоял, словно часовой</td></tr>
+<tr><td>Метафора</td><td>скрытое сравнение, перенос по сходству</td><td>костёр рябины</td></tr>
+<tr><td>Олицетворение</td><td>неживое действует как живое</td><td>ветер поёт</td></tr>
+<tr><td>Метонимия</td><td>перенос по смежности</td><td>зал ахнул</td></tr>
+<tr><td>Гипербола / литота</td><td>преувеличение / преуменьшение</td><td>сто раз говорил / мальчик с пальчик</td></tr>
+<tr><td>Фразеологизм</td><td>устойчивое сочетание с цельным значением</td><td>не покладая рук</td></tr>
+<tr><td>Антитеза</td><td>противопоставление</td><td>умный учится на чужих ошибках, а глупый…</td></tr></table>
+<h4>Задание 12 — лексика</h4>
+<ul>
+<li><b>Синонимы</b> — слова одной части речи, близкие по значению: <i>группы — компании</i>.</li>
+<li><b>Антонимы</b> — противоположные по значению: <i>легко — трудно</i>.</li>
+<li><b>Фразеологизм</b> выписывают целиком, без лишних слов.</li>
+<li>Ответ пишите в той форме, в какой слово стоит в тексте.</li>
+</ul>`
+  },
+  {
+    id: "score", title: "Баллы и оценка", tasks: "Вся работа", html: `
+<p>Максимум за работу — <b>37 первичных баллов</b>: изложение 6, задания 2–12 по 1 баллу (11), сочинение 7, грамотность ГК1–ГК4 по 3 балла (12), фактическая точность ФК1 — 1.</p>
+<table class="tbl"><tr><th>Оценка</th><th>Баллы</th><th>Условие</th></tr>
+<tr><td>«2»</td><td>0–14</td><td></td></tr>
+<tr><td>«3»</td><td>15–25</td><td></td></tr>
+<tr><td>«4»</td><td>26–32</td><td>не менее 6 баллов по ГК1–ГК4, иначе «3»</td></tr>
+<tr><td>«5»</td><td>33–37</td><td>не менее 9 баллов по ГК1–ГК4, иначе «4»</td></tr></table>
+<h4>Как считают ошибки (ГК1–ГК4)</h4>
+<table class="tbl"><tr><th>Ошибок</th><th>0</th><th>1–2</th><th>3–4</th><th>5+</th></tr>
+<tr><td>Баллы</td><td>3</td><td>2</td><td>1</td><td>0</td></tr></table>
+<p class="note">Грамотность оценивают по изложению и сочинению вместе, если их общий объём — 140 слов и более. В тренажёре ГК считается только по изложению — ориентировочно.</p>`
+  }
+];
+
+</script>
+<script>
+/* ===== ИИ-проверка изложения по критериям ФИПИ ===== */
+const AI_SYSTEM = `Ты — эксперт предметной комиссии ОГЭ по русскому языку. Проверяешь сжатое изложение (задание 1) девятиклассника строго по критериям ФИПИ 2026 года.
+
+КРИТЕРИИ СОДЕРЖАНИЯ
+ИК1 «Содержание изложения» (0–2): 2 — точно передано основное содержание, отражены все важные микротемы; 1 — упущена или добавлена одна микротема; 0 — упущено или добавлено более одной микротемы.
+ИК2 «Сжатие исходного текста» (0–2): 2 — один или несколько приёмов сжатия правильно применены на протяжении всего текста (во всех микротемах); 1 — приёмы применены к двум микротемам; 0 — к одной микротеме или не применялись. Приёмы: исключение (повторов, синонимов, уточнений, второстепенных подробностей), обобщение (замена однородных членов общим словом, фрагмента — обобщающим выражением), упрощение (слияние предложений, замена сложного предложения простым, прямой речи — косвенной). Близкий к тексту пересказ без сжатия — не сжатие.
+ИК3 «Логичность речи»: перечисли логические ошибки — пропуск звена в передаче мыслей, неоправданный повтор мысли, отсутствие нужного средства связи, нарушение причинно-следственных связей, нарушение абзацного членения (абзацев меньше или больше, чем микротем, или граница абзаца внутри микротемы). Грамматические и речевые ошибки сюда НЕ относятся.
+
+ГРАМОТНОСТЬ (только перечисли ошибки, баллы считает программа)
+ГК1 — орфографические ошибки. Каждая ошибка считается отдельно; ошибки в одном и том же слове (одной словоформе) — одна ошибка. Не считай описки (пропуск, перестановка букв), вариантные написания, случаи, не изучаемые в школе.
+ГК2 — пунктуационные ошибки (каждый пропущенный или лишний знак). Не считай авторские и вариативные знаки.
+ГК3 — грамматические ошибки: ошибки в образовании форм слов, согласовании, управлении, построении предложений с деепричастным оборотом, однородными членами, сложных предложений. Повторяющиеся однотипные ошибки — одна ошибка.
+ГК4 — речевые ошибки: неточное словоупотребление, тавтология, речевой повтор (слово неоправданно повторено 3 и более раз в одном абзаце), канцеляризмы, неуместное просторечие, неудачное употребление местоимений. Повторяющиеся — одна ошибка.
+ФК1 — фактические ошибки: искажение фактов исходного текста.
+
+ПРАВИЛА
+- Будь точен и осторожен: фиксируй только несомненные ошибки. Не придумывай ошибок, которых нет.
+- Поле fragment — точная цитата из работы ученика (несколько слов вокруг ошибки).
+- Комментарии пиши по-русски, кратко, доброжелательно, обращаясь к ученику на «ты».
+- Ответь ТОЛЬКО одним JSON-объектом без пояснений и без markdown.
+
+ФОРМАТ ОТВЕТА
+{"microthemes":[{"n":1,"status":"передана|частично|упущена","comment":"..."}],
+"extra_microthemes":0,
+"IK1":{"score":0,"comment":"..."},
+"IK2":{"score":0,"techniques":[{"microtheme":1,"technique":"исключение|обобщение|упрощение","example":"..."}],"comment":"..."},
+"IK3":{"errors":[{"fragment":"...","explanation":"..."}],"comment":"..."},
+"GK1":{"errors":[{"fragment":"...","correction":"...","rule":"..."}]},
+"GK2":{"errors":[{"fragment":"...","correction":"...","rule":"..."}]},
+"GK3":{"errors":[{"fragment":"...","correction":"...","rule":"..."}]},
+"GK4":{"errors":[{"fragment":"...","correction":"...","rule":"..."}]},
+"FK1":{"errors":[{"fragment":"...","correction":"...","rule":"..."}]},
+"summary":"2–3 предложения об общем впечатлении",
+"advice":["совет 1","совет 2","совет 3"]}`;
+
+function buildUserPrompt(src, studentText, words) {
+  let s = "";
+  if (src && src.text) {
+    s += "ИСХОДНЫЙ ТЕКСТ (" + (src.title || "без названия") + "):\n" + src.text + "\n\n";
+  } else {
+    s += "ИСХОДНЫЙ ТЕКСТ: не предоставлен. Оцени ИК1 и ИК2 по тому, что можно понять из работы, и прямо укажи в комментарии, что оценка ориентировочная.\n\n";
+  }
+  if (src && src.micro && src.micro.length) {
+    s += "МИКРОТЕМЫ (эталон):\n" + src.micro.map((m, i) => (i + 1) + ". " + m).join("\n") + "\n\n";
+  }
+  s += "ИЗЛОЖЕНИЕ УЧЕНИКА (" + words + " слов, абзацы разделены пустой строкой или переносом):\n<<<\n" + studentText + "\n>>>";
+  return s;
+}
+
+function parseJSONLoose(t) {
+  if (t && typeof t === "object") return t;
+  t = String(t || "").replace(/```json|```/g, "");
+  const a = t.indexOf("{"), b = t.lastIndexOf("}");
+  if (a < 0 || b < a) throw new Error("ИИ вернул ответ не в формате JSON");
+  return JSON.parse(t.slice(a, b + 1));
+}
+
+const AIProviders = {
+  async claude(sys, user, signal) {
+    if (!window.claude || !window.claude.use) throw { code: "unavailable", message: "Встроенный ИИ доступен только на странице claude.ai" };
+    const sample = await window.claude.use("sample");
+    if (!sample) throw { code: "unavailable", message: "Встроенная проверка сейчас недоступна. Выберите DeepSeek в настройках ИИ." };
+    const input = sys + "\n\n" + user;
+    try {
+      if (typeof sample.json === "function") return parseJSONLoose(await sample.json(input, { modelTier: "complex", signal }));
+    } catch (e) { if (e && (e.code === "not_granted" || e.code === "rate_limited")) throw e; }
+    const r = await sample(input, { modelTier: "complex", signal });
+    return parseJSONLoose(r.text);
+  },
+  async deepseek(sys, user, signal) {
+    const cfg = AIConfig;
+    if (!cfg.proxy) throw { code: "no_proxy", message: "Администратор ещё не настроил ИИ-проверку (нет адреса прокси)." };
+    let token = "";
+    try { token = await Backend.token(); } catch (_) { throw { code: "auth", message: "Войдите в аккаунт, чтобы проверять изложения." }; }
+    let res;
+    try {
+      res = await fetch(cfg.proxy.replace(/\/+$/, "") + "/chat/completions", {
+        method: "POST", signal,
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+        body: JSON.stringify({
+          model: cfg.model || "deepseek-v4-pro",
+          messages: [{ role: "system", content: sys }, { role: "user", content: user }],
+          response_format: { type: "json_object" },
+          max_tokens: 8000
+        })
+      });
+    } catch (e) {
+      if (e.name === "AbortError") throw e;
+      throw { code: "network", message: "Не удалось связаться с сервером проверки. Проверьте интернет или адрес прокси в разделе «Админ»." };
+    }
+    if (!res.ok) {
+      let msg = "Ошибка сервера проверки " + res.status;
+      try { const j = await res.json(); msg += ": " + ((j.error && (j.error.message || j.error)) || JSON.stringify(j)); } catch (_) {}
+      if (res.status === 401) msg = "Сервер проверки не принял вход. Выйдите и войдите снова.";
+      if (res.status === 402) msg = "На балансе DeepSeek закончились средства — сообщите администратору.";
+      throw { code: "http", message: msg };
+    }
+    const data = await res.json();
+    return parseJSONLoose(data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content);
+  }
+};
+
+/* Настройки ИИ хранятся в Firestore (config/ai), менять их может только администратор */
+let AIConfig = { proxy: "", model: "deepseek-v4-pro" };
+
+async function resolveProvider() {
+  if (Backend.mode === "firebase") return "deepseek";
+  return "claude";
+}
+
+/* Подсчёт баллов из ответа ИИ по правилам ФИПИ */
+function scoreFromAI(r, words) {
+  const n = k => (r[k] && Array.isArray(r[k].errors)) ? r[k].errors.length : 0;
+  const clamp = (v, m) => Math.max(0, Math.min(m, Math.round(Number(v) || 0)));
+  const ik3err = n("IK3");
+  const s = {
+    IK1: clamp(r.IK1 && r.IK1.score, 2),
+    IK2: clamp(r.IK2 && r.IK2.score, 2),
+    IK3: ik3err === 0 ? 2 : ik3err <= 2 ? 1 : 0,
+    GK1: gkScore(n("GK1")), GK2: gkScore(n("GK2")), GK3: gkScore(n("GK3")), GK4: gkScore(n("GK4")),
+    FK1: n("FK1") ? 0 : 1
+  };
+  if (words < 70) { s.IK1 = s.IK2 = s.IK3 = 0; }
+  s.content = s.IK1 + s.IK2 + s.IK3;
+  s.literacy = s.GK1 + s.GK2 + s.GK3 + s.GK4 + s.FK1;
+  return s;
+}
+
+</script>
+<script>
+/* ===== Логика тренажёра ===== */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const TASK_IDS = Object.keys(TASKS).sort((a, b) => a - b);
+const HARD = { "5": 1, "6": 1, "7": 1, "4": 1 };
+
+/* ---------- Хранилище ----------
+   Локально — localStorage (отдельно для каждого аккаунта), в облаке — документ users/{uid} в Firestore. */
+const EMPTY = () => ({ tasks: {}, izl: [], variants: [], activity: [] });
+const Store = {
+  KEY: "oge-ru-progress",
+  data: EMPTY(),
+  timer: null,
+  norm(d) { d = Object.assign(EMPTY(), d || {}); ["izl", "variants", "activity"].forEach(k => { if (!Array.isArray(d[k])) d[k] = []; }); return d; },
+  key() { return this.KEY + (Backend.user ? "-" + Backend.user.uid : ""); },
+  load() { try { this.data = this.norm(JSON.parse(localStorage.getItem(this.key()) || "null")); } catch (_) { this.data = EMPTY(); } },
+  save() {
+    const d = this.data;
+    d.activity = d.activity.slice(-300); d.izl = d.izl.slice(-30); d.variants = d.variants.slice(-50);
+    try { localStorage.setItem(this.key(), JSON.stringify(d)); } catch (_) {}
+    if (Backend.mode === "firebase" && Backend.user) {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => Backend.save(this.data).then(() => setSync("ok")).catch(() => setSync("err")), 1200);
+      setSync("wait");
+    }
+  },
+  log(e) { e.t = Date.now(); this.data.activity.push(e); },
+  rec(tid, idx, ok, val) {
+    const t = this.data.tasks[tid] || (this.data.tasks[tid] = { tries: 0, ok: 0, items: {} });
+    t.tries++; if (ok) t.ok++; t.items[idx] = ok ? 1 : (t.items[idx] || 0); t.last = Date.now();
+    this.log({ type: "task", tid, idx, ok: ok ? 1 : 0, val: String(val || "").slice(0, 30) });
+    this.save();
+  },
+  task(tid, d) { return ((d || this.data).tasks || {})[tid] || { tries: 0, ok: 0, items: {} }; }
+};
+function setSync(st) {
+  const el = $("#sync"); if (!el) return;
+  el.textContent = st === "ok" ? "Прогресс сохранён" : st === "err" ? "Не удалось сохранить — проверьте интернет" : "Сохраняю…";
+  el.className = "small " + (st === "err" ? "bad-t" : "muted");
+}
+
+/* ---------- Проверка ответов ---------- */
+function normWord(s) { return String(s || "").toLowerCase().replace(/ё/g, "е").replace(/[^a-zа-я0-9]/g, ""); }
+function digits(s) { return String(s || "").replace(/\D/g, ""); }
+function isCorrect(item, type, val) {
+  const t = item.type || type;
+  if (Array.isArray(item.answer)) return item.answer.some(a => normWord(a) === normWord(val));
+  const v = digits(val);
+  if (t === "seq") return v === item.answer;
+  return v.length === item.answer.length && [...v].sort().join("") === [...item.answer].sort().join("") && new Set(v).size === v.length;
+}
+function answerType(tid, item) { return Array.isArray(item.answer) ? "word" : (item.type || "set"); }
+function answerText(item) { return Array.isArray(item.answer) ? item.answer[0] : item.answer; }
+
+/* ---------- Рендер задания ---------- */
+function textBlock(tid, item) {
+  const T = TASKS[tid];
+  let src = null;
+  if (T.macro) src = MACROTEXT; else if (item.text) src = MICROTEXTS[item.text];
+  if (!src) return "";
+  return `<div class="ctext"><div class="small muted" style="margin-bottom:4px">${esc(src.title)}</div>${src.s.map((x, i) => `<p><span class="sn">(${i + 1})</span> ${esc(x)}</p>`).join("")}</div>`;
+}
+function renderItem(tid, idx, opts = {}) {
+  const T = TASKS[tid], item = T.items[idx], type = answerType(tid, item), pref = opts.prefix || "q";
+  const instr = item.instr || T.instr || "";
+  let h = "";
+  if (!opts.compact) h += `<div class="qhead"><div class="row"><span class="qno">${tid}</span><div><h2 style="font-size:1.15rem">${esc(T.name)}</h2><span class="small muted">${esc(T.skill)} · задание ${idx + 1} из ${T.items.length}</span></div></div><a class="small" href="#theory-${T.theory}">Правило к заданию</a></div>`;
+  else h += `<div class="row" style="margin-bottom:6px"><span class="qno">${tid}</span><strong>${esc(T.name)}</strong></div>`;
+  h += `<p class="instr">${esc(instr)}${item.letter ? ` Буква: <span class="pill">${esc(item.letter)}</span>` : ""}</p>`;
+  h += textBlock(tid, item);
+  if (item.rules) h += `<ul class="rules">${item.rules.map(r => `<li>${esc(r)}</li>`).join("")}</ul>`;
+  if (item.sentence) h += `<div class="sentence">${esc(item.sentence).replace(/\((\d)\)/g, '<span class="gap">($1)</span>')}</div>`;
+  if (item.options) h += `<ol class="opts" id="${pref}-opts">${item.options.map((o, i) => `<li data-i="${i + 1}"><span class="n">${i + 1})</span><span>${esc(o[0])}<span class="why" hidden>${esc(o[1])}</span></span></li>`).join("")}</ol>`;
+  const ph = type === "word" ? "слово" : type === "seq" ? "А Б В" : "цифры";
+  h += `<div class="answerline"><label for="${pref}-ans">Ответ</label><input class="cells ${type === "word" ? "word" : ""}" id="${pref}-ans" autocomplete="off" spellcheck="false" ${type === "word" ? "" : 'inputmode="numeric"'} maxlength="${type === "word" ? 24 : 6}" placeholder="${ph}"></div>`;
+  return h;
+}
+function showFeedback(tid, idx, val, root, pref) {
+  const T = TASKS[tid], item = T.items[idx], ok = isCorrect(item, null, val), type = answerType(tid, item);
+  const opts = root.querySelector(`#${pref}-opts`);
+  if (opts) {
+    const right = type === "seq" ? null : new Set(item.answer);
+    opts.querySelectorAll("li").forEach(li => {
+      const i = li.dataset.i; li.querySelector(".why").hidden = false;
+      if (right) li.classList.add(right.has(i) ? "right" : "wrong");
+      else li.classList.add(item.answer.includes(i) ? "right" : "wrong");
+    });
+  }
+  let ex = item.explain || "";
+  if (type === "seq") ex = "Соответствие: " + ["А", "Б", "В"].map((l, i) => l + " — " + item.answer[i]).join(", ") + ". " + ex;
+  return { ok, html: `<div class="verdict ${ok ? "ok" : "bad"}">${ok ? "Верно! +1 балл" : "Неверно. Правильный ответ: " + esc(answerText(item))}<span class="ex">${esc(ex)}</span></div>` };
+}
+
+/* ---------- Практика ---------- */
+let cur = { tid: "2", idx: 0 };
+function renderTList() {
+  $("#tlist").innerHTML = TASK_IDS.map(t => {
+    const s = Store.task(t), done = Object.values(s.items).filter(Boolean).length;
+    return `<a href="#task-${t}" class="${t === cur.tid ? "on" : ""}"><span class="n">${t}</span><span>${esc(TASKS[t].name)}<small>${done}/${TASKS[t].items.length} решено</small></span></a>`;
+  }).join("");
+}
+function openTask(tid, idx) {
+  if (!TASKS[tid]) tid = "2";
+  if (idx == null) { const s = Store.task(tid); idx = TASKS[tid].items.findIndex((_, i) => !s.items[i]); if (idx < 0) idx = 0; }
+  cur = { tid, idx };
+  renderTList();
+  const box = $("#qbox"), T = TASKS[tid];
+  box.innerHTML = renderItem(tid, idx) + `<div class="row" style="margin-top:14px"><button class="btn" id="q-check">Проверить</button><button class="btn ghost" id="q-hint">Подсказка</button><button class="btn ghost" id="q-next">Следующее →</button></div><div id="q-out"></div>`;
+  const inp = $("#q-ans"); inp.focus({ preventScroll: true });
+  let checked = false;
+  const check = () => {
+    if (!inp.value.trim()) { $("#q-out").innerHTML = `<div class="hintbox">Впишите ответ в клеточки.</div>`; return; }
+    if (checked) return; checked = true;
+    const fb = showFeedback(tid, idx, inp.value, box, "q");
+    Store.rec(tid, idx, fb.ok, inp.value); $("#q-out").innerHTML = fb.html; renderTList(); $("#q-check").disabled = true;
+  };
+  $("#q-check").onclick = check;
+  inp.onkeydown = e => { if (e.key === "Enter") check(); };
+  $("#q-hint").onclick = () => { $("#q-out").innerHTML = `<div class="hintbox"><b>Подсказка.</b> ${esc(T.items[idx].hint || "Перечитайте правило к заданию.")}</div>`; };
+  $("#q-next").onclick = () => { const n = (idx + 1) % T.items.length; openTask(tid, n); $("#qbox").scrollIntoView({ block: "start" }); };
+}
+
+/* ---------- Вариант ---------- */
+let variant = null, vTimer = null;
+function newVariant() {
+  variant = TASK_IDS.map(t => ({ tid: t, idx: Math.floor(Math.random() * TASKS[t].items.length) }));
+  variant.t0 = Date.now();
+  $("#v-body").innerHTML = variant.map((v, k) => `<div class="vitem" id="vi-${k}">${renderItem(v.tid, v.idx, { compact: true, prefix: "v" + k })}<div id="vo-${k}"></div></div>`).join("");
+  $("#v-result").innerHTML = ""; $("#v-finish").disabled = false;
+  const t0 = Date.now(); clearInterval(vTimer);
+  vTimer = setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000); $("#v-timer").textContent = String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0"); }, 1000);
+}
+function finishVariant() {
+  if (!variant) return;
+  clearInterval(vTimer);
+  let score = 0; const miss = [];
+  variant.forEach((v, k) => {
+    const val = $("#v" + k + "-ans").value, root = $("#vi-" + k);
+    const fb = showFeedback(v.tid, v.idx, val, root, "v" + k);
+    $("#vo-" + k).innerHTML = fb.html; Store.rec(v.tid, v.idx, fb.ok, val);
+    if (fb.ok) score++; else miss.push(v.tid);
+  });
+  $("#v-finish").disabled = true;
+  const sec = Math.round((Date.now() - variant.t0) / 1000);
+  Store.data.variants.push({ t: Date.now(), score, miss, sec });
+  Store.log({ type: "variant", score, miss }); Store.save();
+  $("#v-result").innerHTML = `<div class="verdict ${score >= 8 ? "ok" : "bad"}" style="font-size:1.1rem">Результат: ${score} из 11 баллов за задания 2–12.${miss.length ? `<span class="ex">Повторите правила к заданиям: ${miss.map(t => `<a href="#task-${t}">${t}</a>`).join(", ")}.</span>` : ""}</div>`;
+  $("#v-result").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+/* ---------- Теория ---------- */
+function openTheory(id) {
+  const t = THEORY.find(x => x.id === id) || THEORY[0];
+  $("#th-side").innerHTML = THEORY.map(x => `<a href="#theory-${x.id}" class="${x.id === t.id ? "on" : ""}">${esc(x.title)}<small>${esc(x.tasks)}</small></a>`).join("");
+  const linked = TASK_IDS.filter(k => TASKS[k].theory === t.id);
+  $("#th-body").innerHTML = `<span class="pill">${esc(t.tasks)}</span><h2 style="margin:10px 0 6px">${esc(t.title)}</h2><div class="tblwrap">${t.html}</div>` +
+    (linked.length ? `<div class="row" style="margin-top:18px">${linked.map(k => `<a class="btn ghost" href="#task-${k}">Тренировать задание ${k}</a>`).join("")}</div>` : t.id === "izl" ? `<div class="row" style="margin-top:18px"><a class="btn" href="#izlozhenie">Написать изложение</a></div>` : "");
+}
+
+/* ---------- Главная и прогресс ---------- */
+function renderHome() {
+  $("#home-tasks").innerHTML = TASK_IDS.map(t => {
+    const s = Store.task(t), done = Object.values(s.items).filter(Boolean).length, p = Math.round(done / TASKS[t].items.length * 100);
+    return `<a class="taskcard ${HARD[t] ? "hard" : ""}" href="#task-${t}"><div class="row" style="justify-content:space-between"><span class="no">№ ${t}</span>${HARD[t] ? '<span class="pill bad">сложное</span>' : ""}</div><strong>${esc(TASKS[t].name)}</strong><span class="small muted">${esc(TASKS[t].skill)}</span><div class="bar"><i style="width:${p}%"></i></div><span class="small muted">${done} из ${TASKS[t].items.length}</span></a>`;
+  }).join("");
+  let tries = 0, ok = 0, solved = 0;
+  TASK_IDS.forEach(t => { const s = Store.task(t); tries += s.tries; ok += s.ok; solved += Object.values(s.items).filter(Boolean).length; });
+  $("#k-solved").textContent = solved; $("#k-acc").textContent = tries ? Math.round(ok / tries * 100) + "%" : "—"; $("#k-izl").textContent = Store.data.izl.length;
+}
+const fmtDate = t => t ? new Date(t).toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "—";
+const IZL_ADVICE = {
+  IK1: "Передавайте все три микротемы: перед письмом составьте план из трёх пунктов.",
+  IK2: "Применяйте приёмы сжатия в каждой микротеме: исключение, обобщение, упрощение.",
+  IK3: "Следите за логикой: одна микротема — один абзац, связывайте абзацы.",
+  GK1: "Орфография: повторите правила к заданиям 6–7 и проверяйте сомнительные слова по словарю.",
+  GK2: "Пунктуация: повторите правила к заданиям 4–5 (обособление, сложные предложения).",
+  GK3: "Грамматика: проверяйте согласование, деепричастные обороты и формы слов.",
+  GK4: "Речь: избегайте повторов одного слова и неточных слов."
+};
+/* Рекомендации «что улучшить» по данным ученика */
+function advise(d) {
+  const out = [];
+  const weak = TASK_IDS.map(t => ({ t, s: Store.task(t, d) })).filter(x => x.s.tries >= 2 && x.s.ok / x.s.tries < 0.6)
+    .sort((a, b) => a.s.ok / a.s.tries - b.s.ok / b.s.tries);
+  weak.forEach(x => out.push({ lvl: "bad", html: `Задание ${x.t} «${esc(TASKS[x.t].name)}»: верно ${Math.round(x.s.ok / x.s.tries * 100)}% ответов. <a href="#theory-${TASKS[x.t].theory}">Повторите правило</a> и <a href="#task-${x.t}">потренируйтесь</a>.` }));
+  const fresh = TASK_IDS.filter(t => !Store.task(t, d).tries);
+  if (fresh.length) out.push({ lvl: "warn", html: `Ещё не решали задания: ${fresh.map(t => `<a href="#task-${t}">${t}</a>`).join(", ")}.` });
+  const iz = (d.izl || []).filter(r => r.s).slice(-5);
+  if (!iz.length) out.push({ lvl: "warn", html: `Вы ещё не писали изложение — <a href="#izlozhenie">попробуйте</a>, это 6 баллов на экзамене.` });
+  else {
+    Object.keys(IZL_ADVICE).forEach(k => {
+      const max = CRITERIA[k].max, avg = iz.reduce((a, r) => a + (r.s[k] || 0), 0) / iz.length;
+      if (avg < max - 0.5) out.push({ lvl: avg < max / 2 ? "bad" : "warn", html: `${k.replace("IK", "ИК").replace("GK", "ГК")} в изложениях: в среднем ${avg.toFixed(1)} из ${max}. ${IZL_ADVICE[k]}` });
+    });
+  }
+  const v = (d.variants || []).slice(-1)[0];
+  if (v && v.score < 9) out.push({ lvl: "warn", html: `Последний вариант: ${v.score} из 11. <a href="#variant">Пройдите ещё один</a> после повторения слабых заданий.` });
+  if (!out.length) out.push({ lvl: "ok", html: "Слабых мест не видно. Продолжайте решать варианты и писать изложения." });
+  return out;
+}
+function actText(a) {
+  if (a.type === "task") return `Задание ${a.tid}, № ${a.idx + 1}: ответ «${esc(a.val)}» — ${a.ok ? '<span class="pill ok">верно</span>' : '<span class="pill bad">неверно</span>'}`;
+  if (a.type === "variant") return `Вариант: <b>${a.score} из 11</b>`;
+  if (a.type === "izl") return `Изложение «${esc(a.title)}»: <b>${a.content}/6</b> за содержание, ${a.literacy}/13 за грамотность`;
+  return esc(a.type);
+}
+function renderProgress(d, el, opts = {}) {
+  d = Store.norm(d || Store.data); el = el || $("#pg-body");
+  let tries = 0, ok = 0, solved = 0;
+  TASK_IDS.forEach(t => { const s = Store.task(t, d); tries += s.tries; ok += s.ok; solved += Object.values(s.items).filter(Boolean).length; });
+  const izs = d.izl.filter(r => r.content != null);
+  const avgIzl = izs.length ? (izs.reduce((a, r) => a + r.content, 0) / izs.length).toFixed(1) : "—";
+  const last = d.activity.length ? d.activity[d.activity.length - 1].t : null;
+  const rows = TASK_IDS.map(t => {
+    const s = Store.task(t, d), acc = s.tries ? Math.round(s.ok / s.tries * 100) : null;
+    const st = acc == null ? '<span class="pill">не начато</span>' : acc >= 80 ? '<span class="pill ok">хорошо</span>' : acc >= 50 ? '<span class="pill warn">повторить</span>' : '<span class="pill bad">слабое место</span>';
+    return `<tr><td class="num">${t}</td><td>${esc(TASKS[t].name)}</td><td class="num">${Object.values(s.items).filter(Boolean).length}/${TASKS[t].items.length}</td><td class="num">${s.ok}/${s.tries}</td><td style="min-width:110px"><div class="bar"><i style="width:${acc || 0}%"></i></div></td><td>${st}</td></tr>`;
+  }).join("");
+  const adv = advise(d).map(a => `<li class="adv ${a.lvl}">${a.html}</li>`).join("");
+  const iz = d.izl.slice().reverse().map((r, i) => `<details><summary>${esc(r.date || fmtDate(r.t))} · «${esc(r.title)}» · ${r.words} слов · <span class="num">${r.content}/6</span> + <span class="num">${r.literacy}/13</span></summary>
+    ${r.text ? `<h4>Текст изложения</h4><div class="src">${esc(r.text).split(/\n+/).map(p => `<p>${p}</p>`).join("")}</div>` : ""}${r.r ? renderReport(r.r, r.s, r.words, r.prov || "deepseek", true) : ""}</details>`).join("");
+  const vs = d.variants.slice().reverse().slice(0, 10).map(v => `<tr><td>${fmtDate(v.t)}</td><td class="num">${v.score}/11</td><td class="num">${v.sec ? Math.round(v.sec / 60) + " мин" : "—"}</td><td>${v.miss && v.miss.length ? v.miss.join(", ") : "—"}</td></tr>`).join("");
+  const hist = d.activity.slice().reverse().slice(0, 25).map(a => `<tr><td class="nowrap">${fmtDate(a.t)}</td><td>${actText(a)}</td></tr>`).join("");
+  el.innerHTML = `<div class="kpis kp5">
+      <div class="kpi"><div class="v">${solved}</div><div class="small muted">решено заданий из 42</div></div>
+      <div class="kpi"><div class="v">${tries ? Math.round(ok / tries * 100) + "%" : "—"}</div><div class="small muted">верных ответов</div></div>
+      <div class="kpi"><div class="v">${d.variants.length}</div><div class="small muted">вариантов</div></div>
+      <div class="kpi"><div class="v">${izs.length}</div><div class="small muted">изложений, ср. ${avgIzl}/6</div></div>
+      <div class="kpi"><div class="v small" style="font-size:1rem">${fmtDate(last)}</div><div class="small muted">последнее занятие</div></div></div>
+    <h3 style="margin-top:24px">Что улучшить</h3><ul class="advs">${adv}</ul>
+    <h3 style="margin-top:24px">Задания 2–12</h3><div class="tblwrap"><table class="tbl"><tr><th>№</th><th>Задание</th><th>Решено</th><th>Верно / попыток</th><th>Точность</th><th>Статус</th></tr>${rows}</table></div>
+    <h3 style="margin-top:24px">Изложения</h3>${iz || '<p class="muted">Пока нет проверенных изложений.</p>'}
+    <h3 style="margin-top:24px">Варианты</h3>${vs ? `<div class="tblwrap"><table class="tbl"><tr><th>Дата</th><th>Баллы</th><th>Время</th><th>Ошибки в заданиях</th></tr>${vs}</table></div>` : '<p class="muted">Вариантов пока не было.</p>'}
+    <h3 style="margin-top:24px">История</h3>${hist ? `<div class="tblwrap"><table class="tbl">${hist}</table></div>` : '<p class="muted">Здесь появятся ваши действия.</p>'}`;
+}
+
+/* ---------- Изложение ---------- */
+function countWords(t) { return (String(t).match(/[A-Za-zА-Яа-яЁё]+(?:-[A-Za-zА-Яа-яЁё]+)*/g) || []).length; }
+const Izl = {
+  stage: 0, audioURL: null, tts: undefined, playing: false, pauseTimer: null,
+  src() {
+    const v = $("#izl-src").value;
+    if (v === "custom") return { custom: true, title: "Своя аудиозапись", text: $("#izl-srctext").value.trim(), micro: [] };
+    const t = IZL_TEXTS.find(x => x.id === v) || IZL_TEXTS[0];
+    return { title: t.title, text: t.paragraphs.join("\n\n"), paragraphs: t.paragraphs, micro: t.micro };
+  },
+  setStage(n) {
+    this.stage = n;
+    [...$("#izl-steps").children].forEach((s, i) => { s.className = i < n ? "done" : i === n ? "on" : ""; });
+    this.controls();
+  },
+  status(t) { $("#izl-status").textContent = t || ""; },
+  controls() {
+    const c = $("#izl-controls"), n = this.stage;
+    if (this.playing) { c.innerHTML = `<button class="btn red" id="izl-stop">Остановить</button>`; $("#izl-stop").onclick = () => this.stop(); return; }
+    if (n === 0) c.innerHTML = `<button class="btn" id="izl-play">▶ Первое прослушивание</button>`;
+    else if (n === 1) c.innerHTML = `<button class="btn ghost" id="izl-skip">Пропустить перерыв</button>`;
+    else if (n === 2) c.innerHTML = `<button class="btn" id="izl-play">▶ Второе прослушивание</button>`;
+    else c.innerHTML = `<button class="btn ghost" id="izl-again">Прослушать ещё раз</button><button class="btn ghost" id="izl-reset">Начать заново</button>`;
+    const p = $("#izl-play"); if (p) p.onclick = () => this.play();
+    const s = $("#izl-skip"); if (s) s.onclick = () => this.endPause();
+    const a = $("#izl-again"); if (a) a.onclick = () => this.play(true);
+    const r = $("#izl-reset"); if (r) r.onclick = () => this.reset();
+  },
+  async getTTS() {
+    if (this.tts !== undefined) return this.tts;
+    this.tts = null;
+    if (window.claude && window.claude.use) { try { this.tts = await window.claude.use("tts"); } catch (_) { this.tts = null; } }
+    return this.tts;
+  },
+  async speakText(paras) {
+    const t = await this.getTTS();
+    if (t) {
+      try { await t.speak(paras.map(p => ({ text: p, language: "ru" })), { rate: 0.9 }); return; }
+      catch (e) { if (e && e.code === "viewer_stopped") return; if (!("speechSynthesis" in window)) throw e; }
+    }
+    if (!("speechSynthesis" in window)) throw new Error("Озвучка недоступна в этом браузере");
+    const voices = speechSynthesis.getVoices(); const ru = voices.find(v => /ru/i.test(v.lang));
+    for (const p of paras) {
+      if (!this.playing) return;
+      await new Promise((res, rej) => { const u = new SpeechSynthesisUtterance(p); u.lang = "ru-RU"; if (ru) u.voice = ru; u.rate = 0.9; u.onend = res; u.onerror = e => (e.error === "interrupted" || e.error === "canceled") ? res() : rej(new Error(e.error)); speechSynthesis.speak(u); });
+      await new Promise(r => setTimeout(r, 700));
+    }
+  },
+  async play(extra) {
+    const src = this.src();
+    this.playing = true; this.controls(); this.status("Слушайте внимательно и делайте записи в черновике.");
+    try {
+      if (src.custom) {
+        if (!this.audioURL) throw new Error("Сначала выберите аудиофайл");
+        const a = $("#izl-audio"); a.src = this.audioURL; a.currentTime = 0;
+        await a.play(); await new Promise(r => { a.onended = r; a.onpause = r; });
+      } else await this.speakText(src.paragraphs);
+    } catch (e) { this.playing = false; this.status("Не удалось воспроизвести: " + (e.message || e.code || e) + ". Попросите учителя прочитать текст или загрузите аудиозапись."); this.controls(); return; }
+    this.playing = false;
+    if (extra) { this.status(""); this.controls(); return; }
+    if (this.stage === 0) this.startPause(); else if (this.stage === 2) { this.setStage(3); this.status("Пишите изложение. Не забудьте разделить его на три абзаца."); $("#izl-text").focus(); }
+  },
+  stop() {
+    this.playing = false;
+    try { $("#izl-audio").pause(); } catch (_) {}
+    if (this.tts) try { this.tts.stop(); } catch (_) {}
+    if ("speechSynthesis" in window) speechSynthesis.cancel();
+    this.controls();
+  },
+  startPause() {
+    let left = +$("#izl-pause").value; this.setStage(1);
+    if (!left) return this.endPause();
+    const tick = () => { this.status(`Перерыв: ${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}. Разделите записи на три микротемы.`); if (left-- <= 0) this.endPause(); };
+    tick(); this.pauseTimer = setInterval(tick, 1000);
+  },
+  endPause() { clearInterval(this.pauseTimer); this.setStage(2); this.status("Начинается второе прослушивание — дополните записи."); },
+  reset() { this.stop(); clearInterval(this.pauseTimer); this.setStage(0); this.status(""); $("#izl-result").innerHTML = ""; $("#izl-srcbox").innerHTML = ""; },
+  updateWC() {
+    const t = $("#izl-text").value, n = countWords(t), el = $("#izl-wc");
+    el.textContent = n; el.className = "wc " + (n < 70 ? "low" : "okc");
+    const pars = t.split(/\n+/).filter(s => s.trim()).length;
+    $("#izl-par").textContent = t.trim() ? `· абзацев: ${pars}` : "";
+  },
+  showSource() {
+    const s = this.src(), box = $("#izl-srcbox");
+    if (box.innerHTML) { box.innerHTML = ""; $("#izl-show").textContent = "Показать исходный текст"; return; }
+    $("#izl-show").textContent = "Скрыть исходный текст";
+    box.innerHTML = `<details open><summary>Исходный текст: ${esc(s.title)}</summary><div class="src">${s.text ? s.text.split(/\n\n+/).map(p => `<p>${esc(p)}</p>`).join("") : '<p class="muted">Текст не указан.</p>'}</div>${s.micro.length ? `<h4>Микротемы</h4><ol>${s.micro.map(m => `<li>${esc(m)}</li>`).join("")}</ol>` : ""}</details>`;
+  },
+  async check() {
+    const text = $("#izl-text").value.trim(), words = countWords(text), out = $("#izl-result");
+    if (words < 20) { out.innerHTML = `<div class="hintbox">Напишите изложение — сейчас в нём ${words} слов.</div>`; return; }
+    const src = this.src(), btn = $("#izl-check");
+    const prov = await resolveProvider();
+    btn.disabled = true; out.innerHTML = `<div class="hintbox"><span class="spinner"></span> ${prov === "claude" ? "Claude" : "DeepSeek"} проверяет изложение по критериям ФИПИ. Это займёт до минуты…</div>`;
+    try {
+      const r = await AIProviders[prov](AI_SYSTEM, buildUserPrompt(src, text, words));
+      const s = scoreFromAI(r, words);
+      out.innerHTML = renderReport(r, s, words, prov);
+      Store.data.izl.push({ t: Date.now(), date: new Date().toLocaleDateString("ru-RU"), title: src.title, words, content: s.content, literacy: s.literacy, s, r, prov, text: text.slice(0, 4000) });
+      Store.log({ type: "izl", title: src.title, content: s.content, literacy: s.literacy }); Store.save();
+      this.setStage(4);
+    } catch (e) {
+      out.innerHTML = `<div class="verdict bad">Проверка не удалась.<span class="ex">${esc((e && e.message) || e)} ${e && e.code === "not_granted" ? "Разрешите странице обращаться к Claude или выберите DeepSeek." : ""} ${Backend.admin ? '<a href="#admin">Настройки ИИ</a>' : ""}</span></div>`;
+    } finally { btn.disabled = false; }
+  }
+};
+
+function errList(arr, withCorr) {
+  if (!arr || !arr.length) return '<p class="small muted" style="margin:.2em 0 .8em">Ошибок не найдено.</p>';
+  return `<ul class="errs">${arr.map(e => `<li><mark>${esc(e.fragment)}</mark>${withCorr && e.correction ? ` → <b>${esc(e.correction)}</b>` : ""}${e.rule || e.explanation ? ` <span class="small muted">— ${esc(e.rule || e.explanation)}</span>` : ""}</li>`).join("")}</ul>`;
+}
+function renderReport(r, s, words, prov, compact) {
+  const card = (k, v, max) => `<div class="sc ${v === max ? "full" : v === 0 ? "zero" : ""}"><div class="k">${k.replace("IK","ИК").replace("GK","ГК").replace("FK","ФК")} · ${esc(CRITERIA[k].name)}</div><div class="v">${v}<span class="small muted">/${max}</span></div></div>`;
+  const mt = (r.microthemes || []).map(m => `<li><span class="pill ${m.status === "передана" ? "ok" : m.status === "частично" ? "warn" : "bad"}">${esc(m.status)}</span> Микротема ${esc(m.n)}: ${esc(m.comment)}</li>`).join("");
+  const tech = r.IK2 && r.IK2.techniques ? r.IK2.techniques.map(t => `<li>Микротема ${esc(t.microtheme)} — <b>${esc(t.technique)}</b>: <span class="muted">${esc(t.example)}</span></li>`).join("") : "";
+  return `${compact ? "" : '<h3 style="margin-top:24px">Результат проверки</h3>'}
+  ${words < 70 ? `<div class="note">В изложении ${words} слов — меньше 70. На экзамене такая работа получает 0 баллов по всем критериям.</div>` : ""}
+  <div class="score">${card("IK1", s.IK1, 2)}${card("IK2", s.IK2, 2)}${card("IK3", s.IK3, 2)}<div class="sc"><div class="k">Итого за изложение</div><div class="v">${s.content}<span class="small muted">/6</span></div></div></div>
+  <div class="score">${card("GK1", s.GK1, 3)}${card("GK2", s.GK2, 3)}${card("GK3", s.GK3, 3)}${card("GK4", s.GK4, 3)}${card("FK1", s.FK1, 1)}</div>
+  ${r.summary ? `<p class="lead">${esc(r.summary)}</p>` : ""}
+  <h4>ИК1. Микротемы</h4>${mt ? `<ul class="errs" style="list-style:none;padding:0">${mt}</ul>` : ""}<p class="small muted">${esc(r.IK1 && r.IK1.comment)}</p>
+  <h4>ИК2. Приёмы сжатия</h4>${tech ? `<ul class="errs">${tech}</ul>` : ""}<p class="small muted">${esc(r.IK2 && r.IK2.comment)}</p>
+  <h4>ИК3. Логические ошибки</h4>${errList(r.IK3 && r.IK3.errors)}
+  <h4>ГК1. Орфография</h4>${errList(r.GK1 && r.GK1.errors, true)}
+  <h4>ГК2. Пунктуация</h4>${errList(r.GK2 && r.GK2.errors, true)}
+  <h4>ГК3. Грамматика</h4>${errList(r.GK3 && r.GK3.errors, true)}
+  <h4>ГК4. Речь</h4>${errList(r.GK4 && r.GK4.errors, true)}
+  <h4>ФК1. Фактическая точность</h4>${errList(r.FK1 && r.FK1.errors, true)}
+  ${r.advice && r.advice.length ? `<h4>Что улучшить</h4><ul>${r.advice.map(a => `<li>${esc(a)}</li>`).join("")}</ul>` : ""}
+  <p class="small muted">Проверил: ${prov === "claude" ? "Claude" : "DeepSeek (" + esc(AIConfig.model) + ")"}. Баллы за ГК1–ГК4 посчитаны по таблице ФИПИ из найденных ошибок; на экзамене грамотность оценивают по изложению и сочинению вместе. Оценка тренировочная.</p>`;
+}
+
+function initIzl() {
+  $("#izl-src").innerHTML = IZL_TEXTS.map(t => `<option value="${t.id}">${esc(t.title)}</option>`).join("") + `<option value="custom">Своя аудиозапись (например, из банка ФИПИ)</option>`;
+  $("#izl-src").onchange = () => { $("#izl-custom").hidden = $("#izl-src").value !== "custom"; Izl.reset(); };
+  $("#izl-file").onchange = e => { const f = e.target.files[0]; if (Izl.audioURL) URL.revokeObjectURL(Izl.audioURL); Izl.audioURL = f ? URL.createObjectURL(f) : null; Izl.status(f ? "Файл загружен: " + f.name : ""); };
+  const ta = $("#izl-text");
+  try { ta.value = localStorage.getItem("oge-izl-draft") || ""; } catch (_) {}
+  ta.oninput = () => { Izl.updateWC(); try { localStorage.setItem("oge-izl-draft", ta.value); } catch (_) {} };
+  $("#izl-check").onclick = () => Izl.check();
+  $("#izl-show").onclick = () => Izl.showSource();
+  Izl.setStage(0); Izl.updateWC();
+}
+
+/* ---------- Вход ---------- */
+let authMode = "in";
+function renderAuth() {
+  const up = authMode === "up", rs = authMode === "reset";
+  $("#auth-title").textContent = up ? "Регистрация" : rs ? "Восстановление пароля" : "Вход";
+  $("#auth-name-f").hidden = !up; $("#auth-pass-f").hidden = rs;
+  $("#auth-go").textContent = up ? "Зарегистрироваться" : rs ? "Отправить ссылку" : "Войти";
+  $("#auth-links").innerHTML = up ? `Уже есть аккаунт? <a href="#" data-m="in">Войти</a>` : rs ? `<a href="#" data-m="in">Вернуться ко входу</a>` : `Нет аккаунта? <a href="#" data-m="up">Зарегистрироваться</a> · <a href="#" data-m="reset">Забыли пароль?</a>`;
+  $("#auth-links").querySelectorAll("a").forEach(x => x.onclick = e => { e.preventDefault(); authMode = x.dataset.m; $("#auth-msg").textContent = ""; renderAuth(); });
+}
+function initAuth() {
+  renderAuth();
+  $("#auth-form").onsubmit = async e => {
+    e.preventDefault();
+    const email = $("#auth-email").value.trim(), pass = $("#auth-pass").value, name = $("#auth-name").value.trim(), m = $("#auth-msg"), btn = $("#auth-go");
+    if (authMode === "up" && !name) { m.textContent = "Введите имя и фамилию."; return; }
+    btn.disabled = true; m.className = "small"; m.textContent = "Подождите…";
+    try {
+      if (authMode === "in") await Backend.signIn(email, pass);
+      else if (authMode === "up") await Backend.signUp(name, email, pass);
+      else { await Backend.reset(email); m.className = "small ok-t"; m.textContent = "Ссылка для смены пароля отправлена на " + email + "."; }
+    } catch (err) { m.className = "small bad-t"; m.textContent = authError(err); }
+    finally { btn.disabled = false; }
+  };
+  $("#acc-out").onclick = async () => { await Backend.signOut(); location.hash = "home"; };
+}
+function updateHeader() {
+  const u = Backend.user, fb = Backend.mode === "firebase";
+  $("#acc").hidden = !(fb && u);
+  if (u) $("#acc-name").textContent = u.displayName || u.email;
+  $("#tab-admin").hidden = !Backend.admin;
+  $("#tabs").hidden = fb && !u;
+  $("#demo-note").hidden = fb;
+  $("#verify-note").hidden = !(u && !u.emailVerified);
+}
+
+/* ---------- Админ ---------- */
+let adminUsers = [];
+async function renderAdmin() {
+  if (!Backend.admin) { location.hash = "home"; return; }
+  $("#ai-proxy").value = AIConfig.proxy || ""; $("#ai-model").value = AIConfig.model || "deepseek-v4-pro";
+  $("#ai-prompt").textContent = AI_SYSTEM;
+  const box = $("#adm-users"); box.innerHTML = `<p class="muted"><span class="spinner"></span> Загружаю учеников…</p>`;
+  try { adminUsers = await Backend.listUsers(); } catch (e) { box.innerHTML = `<p class="bad-t">Не удалось загрузить: ${esc(e.message || e)}</p>`; return; }
+  adminUsers.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+  box.innerHTML = adminUsers.length ? `<div class="tblwrap"><table class="tbl clickable"><tr><th>Ученик</th><th>Почта</th><th>Решено</th><th>Точность</th><th>Изложений</th><th>Был на сайте</th></tr>${adminUsers.map((u, i) => {
+    const d = Store.norm(u); let t = 0, o = 0, sol = 0; TASK_IDS.forEach(k => { const x = Store.task(k, d); t += x.tries; o += x.ok; sol += Object.values(x.items).filter(Boolean).length; });
+    return `<tr data-i="${i}" tabindex="0"><td>${esc(u.name || "—")}</td><td>${esc(u.email)}</td><td class="num">${sol}/42</td><td class="num">${t ? Math.round(o / t * 100) + "%" : "—"}</td><td class="num">${d.izl.length}</td><td class="nowrap">${fmtDate(u.updatedAt)}</td></tr>`;
+  }).join("")}</table></div><p class="small muted">Нажмите на ученика, чтобы открыть его прогресс.</p>` : '<p class="muted">Пока никто не зарегистрировался.</p>';
+  box.querySelectorAll("tr[data-i]").forEach(tr => {
+    const open = () => { const u = adminUsers[+tr.dataset.i]; $("#adm-detail").hidden = false; $("#adm-who").textContent = (u.name || u.email) + " · " + u.email; renderProgress(u, $("#adm-prog")); $("#adm-detail").scrollIntoView({ behavior: "smooth" }); };
+    tr.onclick = open; tr.onkeydown = e => { if (e.key === "Enter") open(); };
+  });
+}
+function initAdmin() {
+  $("#ai-save").onclick = async () => {
+    const v = { proxy: $("#ai-proxy").value.trim(), model: $("#ai-model").value }, m = $("#ai-msg");
+    try { await Backend.setAI(v); AIConfig = v; m.className = "small ok-t"; m.textContent = "Сохранено для всех учеников."; }
+    catch (e) { m.className = "small bad-t"; m.textContent = "Не сохранилось: " + (e.message || e); }
+  };
+  $("#ai-test").onclick = async () => {
+    const m = $("#ai-msg"); AIConfig = { proxy: $("#ai-proxy").value.trim(), model: $("#ai-model").value };
+    m.className = "small"; m.innerHTML = `<span class="spinner"></span> Проверяю связь с DeepSeek…`;
+    try { const r = await AIProviders.deepseek("Ответь JSON-объектом {\"ok\":true}.", "Проверка связи"); m.className = "small ok-t"; m.textContent = r && r.ok ? "Подключение работает." : "Ответ получен: " + JSON.stringify(r).slice(0, 80); }
+    catch (e) { m.className = "small bad-t"; m.textContent = "Ошибка: " + ((e && e.message) || e); }
+  };
+}
+
+/* ---------- Отзыв ---------- */
+function initFeedback() {
+  $("#fb-copy").onclick = async () => {
+    const t = `Отзыв о тренажёре ОГЭ\nИмя: ${$("#fb-name").value}\nОценка: ${$("#fb-rate").value}\nПолезный раздел: ${$("#fb-best").value}\nЧто улучшить: ${$("#fb-text").value}`;
+    try { await navigator.clipboard.writeText(t); $("#fb-msg").textContent = "Скопировано — отправьте автору проекта."; }
+    catch (_) { $("#fb-text").value = t; $("#fb-text").select(); $("#fb-msg").textContent = "Скопируйте текст из поля вручную."; }
+  };
+}
+
+/* ---------- Маршруты ---------- */
+function route() {
+  const h = (location.hash || "#home").slice(1);
+  let view = h, arg = null;
+  if (h.startsWith("task-")) { view = "practice"; arg = h.slice(5); }
+  if (h.startsWith("theory-")) { view = "theory"; arg = h.slice(7); }
+  if (!$("#v-" + view) || view === "login") view = "home";
+  if (view === "admin" && !Backend.admin) view = "home";
+  if (Backend.mode === "firebase" && !Backend.user) view = "login";
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("on", v.id === "v-" + view));
+  document.querySelectorAll("#tabs a").forEach(a => a.classList.toggle("on", a.dataset.v === view));
+  if (view === "home") renderHome();
+  if (view === "practice") { if (arg) openTask(arg, arg === cur.tid && $("#qbox").innerHTML ? cur.idx : null); else openTask(cur.tid, cur.idx); }
+  if (view === "theory") openTheory(arg || "orpho");
+  if (view === "variant" && !variant) newVariant();
+  if (view === "progress") renderProgress();
+  if (view === "admin") renderAdmin();
+  window.scrollTo(0, 0);
+}
+
+initIzl(); initFeedback(); initAuth(); initAdmin();
+$("#v-new").onclick = newVariant; $("#v-finish").onclick = finishVariant;
+$("#pg-reset").onclick = () => {
+  const m = $("#pg-msg");
+  if (m.dataset.arm) { Store.data = EMPTY(); Store.save(); delete m.dataset.arm; m.textContent = "Прогресс сброшен."; renderProgress(); }
+  else { m.dataset.arm = "1"; m.textContent = "Нажмите ещё раз, чтобы подтвердить."; }
+};
+window.addEventListener("hashchange", route);
+
+(async function start() {
+  await Backend.init();
+  if (Backend.mode !== "firebase") { Store.load(); updateHeader(); route(); return; }
+  $("#boot").hidden = false;
+  Backend.onUser(async u => {
+    $("#boot").hidden = true;
+    variant = null; cur = { tid: "2", idx: 0 }; $("#qbox").innerHTML = "";
+    if (u) {
+      Store.load();
+      try {
+        const remote = await Backend.load();
+        if (remote) Store.data = Store.norm(remote); else if (Store.data.activity.length) Store.save();
+        try { localStorage.setItem(Store.key(), JSON.stringify(Store.data)); } catch (_) {}
+      } catch (_) { setSync("err"); }
+      AIConfig = Object.assign({ proxy: "", model: "deepseek-v4-pro" }, await Backend.getAI());
+    } else Store.data = EMPTY();
+    updateHeader(); route();
+  });
+})();
+
+</script>
+</body>
+</html>
